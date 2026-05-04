@@ -1,0 +1,32 @@
+{
+  "name": "web-backend-cse340-course",
+  "version": "1.0.0",
+  "description": "learning backend server development",
+  "keywords": [
+    "backend",
+    "development",
+    "server-side"
+  ],
+  "homepage": "https://github.com/sirdave01/web-backend-cse340-course#readme",
+  "bugs": {
+    "url": "https://github.com/sirdave01/web-backend-cse340-course/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sirdave01/web-backend-cse340-course.git"
+  },
+  "license": "ISC",
+  "author": "Osigwe Uchechukwu DavidCaleb",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
