@@ -21,7 +21,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon",
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "ejs": "^5.0.2",
