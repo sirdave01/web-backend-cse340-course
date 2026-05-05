@@ -22,13 +22,6 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.listen(PORT, () => {
-
-    console.log(`Server is running at http://127.0.0.1:${PORT}`);
-
-    console.log(`Environment: ${NODE_ENV}`);
-});
-
 /**
   * Configure Express middleware
   */
@@ -49,4 +42,11 @@ app.get('/organizations', (req, res) => {
 
 app.get('/projects', (req, res) => {
     res.sendFile(path.join(__dirname, 'src/views/projects.html'));
+});
+
+app.listen(PORT, () => {
+
+    console.log(`Server is running at http://127.0.0.1:${PORT}`);
+
+    console.log(`Environment: ${NODE_ENV}`);
 });
