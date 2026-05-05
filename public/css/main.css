@@ -1,31 +1,301 @@
+
+/* ============================================
+   Professional CSS styling for a sleek and modern design
+   ============================================ */
+
+   /* =========================================
+   the root variables for colors, spacing, and other design elements to 
+   maintain consistency across the site and allow for easy theming. 
+   ============================================*/
+
+:root {
+
+    --emerald: #10b981;
+
+    --gold: #fbbf24;
+
+    --dark-bg: #0a0a0a;
+
+    --card-bg: #111113;
+
+    --text: #f1f1f1;
+
+    --text-muted: #a3a3a3;
+
+    --input-bg: #1f1f23;
+
+    --accent: var(--emerald);
+
+    --border: #222226;
+
+    --shadow: rgba(0, 0, 0, 0.4);
+
+    --radius: 12px;
+
+    --spacing-xs: 0.25rem;
+
+    --spacing-sm: 0.5rem;
+
+    --spacing-md: 1rem;
+
+    --spacing-lg: 1.5rem;
+
+}
+
+/* Light Theme */
+
+[data-theme="light"] {
+
+    --dark-bg: #f8f9fa;
+
+    --card-bg: #ffffff;
+
+    --text: #111113;
+
+    --text-muted: #555;
+
+    --input-bg: #f1f1f1;
+
+    --border: #ddd;
+
+    --shadow: rgba(0, 0, 0, 0.08);
+}
+
+/* ==================== RESET ==================== */
+
+* {
+
+    box-sizing: border-box;
+
+    margin: 0;
+
+    padding: 0;
+
+}
+
 html,
 body {
-    background-color: lightblue;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
+
+    max-width: 100vw;
+
+    background: var(--dark-bg);
+
+    color: var(--text);
+
+    font-family: "Inter", system-ui, sans-serif;
+
+    line-height: 1.5;
+
+    min-height: 100vh;
+
 }
 
 body {
-    nav {
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
+    display: flex;
+    flex-direction: column;
+}
 
-        li {
-            display: inline;
-            margin-right: 15px;
-        }
+/* ==================== HEADER ==================== */
+header {
 
-        a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
+    grid-area: header;
 
-            &:hover {
-                color: #0066cc;
-            }
+    position: relative;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: var(--spacing-md);
+
+    border-bottom: 1px solid var(--border);
+
+    background: var(--dark-bg);
+
+    z-index: 10;
+
+    h1 {
+
+        font-size: 1.8rem;
+
+        flex: 1;
+
+        text-align: center;
+
+    }
+
+    button {
+
+        background: none;
+
+        border: none;
+
+        color: var(--text);
+
+        font-size: 1.5rem;
+
+        padding: 8px;
+
+        border-radius: 50%;
+
+        cursor: pointer;
+
+        &:hover {
+
+            background: rgba(16, 185, 129, 0.15);
         }
     }
+}
+
+.hamburger {
+
+    background-color: none;
+
+    border: none;
+
+    font-size: 1.5rem;
+
+    cursor: pointer;
+
+    color: var(--gold);
+
+    &::before {
+
+        content: "\2630";
+
+        font-size: 2rem;
+
+    }
+
+    &.show::before {
+
+        content: "\00D7";
+
+        font-size: 2rem;
+
+    }
+
+}
+
+
+
+nav {
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        display: inline;
+        margin-right: 15px;
+    }
+
+    a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+
+        &:hover {
+            color: #0066cc;
+        }
+
+        &:active,
+        &:focus {
+            color: var(--emerald);
+                
+        }
+    }
+}
+
+/* ==================== SIDEBAR NAV ==================== */
+
+#nav-list {
+
+    /* When #nav-list DOES NOT have the .show class, hide the links */
+
+    & a {
+
+        display: none;
+
+        padding: 14px 24px;
+
+        color: var(--text);
+
+        align-items: center;
+
+        gap: 12px;
+
+        font-size: 1.1rem;
+
+        text-decoration: none;
+
+        cursor: pointer;
+
+    }
+
+    /* When #nav-list HAS the .show class, display the links */
+
+    &.show a {
+
+        display: flex;
+
+    }
+
+    /* Hover & Active states */
+
+    & a:hover,
+    & a[aria-current="page"] {
+
+        background: rgba(16, 185, 129, 0.1);
+
+        color: var(--emerald);
+
+    }
+
+}
+
+main {
+
+    flex: 1;
+
+    padding: var(--spacing-md);
+
+    overflow-y: auto;
+
+    margin-bottom: 70px;
+
+    @media (min-width: 769px) {
+
+        padding: var(--spacing-xl);
+
+        max-width: 700px;
+
+        margin: 0 auto;
+
+        margin-bottom: 0;
+
+    }
+
+}
+
+@keyframes slideDown {
+
+    from {
+
+        opacity: 0;
+
+        transform: translate(-50%, -10px);
+
+    }
+
+    to {
+        
+        opacity: 1;
+        
+        transform: translate(-50%, 0);
+        
+    }
+    
 }
