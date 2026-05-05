@@ -1,31 +1,27 @@
 @media screen and (min-width: 43.75rem) {
 
-/* Navigation */
-  .nav-bar {
-    display: block;
-    /* Always show on large */
-  }
-
   .hamburger {
     display: none;
     /* Hide hamburger */
   }
 
-  .nav-bar ul {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-  }
+    #nav-list {
 
-  .nav-bar li {
-    border: none;
-  }
-
-  .nav-bar a {
-    padding: 0.5rem 1rem;
-    font-size: 2rem;
-    font-weight: bold;
-  }
+      display: block;
+  
+      gap: 20px;
+      
+    }
+  
+    #nav-list a {
+      display: flex;
+  
+      flex-direction: column;
+  
+      text-decoration: none;
+  
+      padding: 10px;
+    }
 
   
 }

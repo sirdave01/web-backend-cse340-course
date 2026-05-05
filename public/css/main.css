@@ -52,13 +52,10 @@
 
     --text: #111113;
 
-    --text-muted: #555;
-
-    --input-bg: #f1f1f1;
-
     --border: #ddd;
 
     --shadow: rgba(0, 0, 0, 0.08);
+    
 }
 
 /* ==================== RESET ==================== */
@@ -180,8 +177,12 @@ header {
 }
 
 
+li{
+    text-decoration: none;
+}
 
 nav {
+
     ul {
         list-style-type: none;
         padding: 0;
@@ -265,6 +266,8 @@ main {
     overflow-y: auto;
 
     margin-bottom: 70px;
+    
+    background-color: var(--gold);
 
     @media (min-width: 769px) {
 
