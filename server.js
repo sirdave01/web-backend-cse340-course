@@ -6,6 +6,8 @@ import { fileURLToPath } from 'url';
 
 import path from 'path';
 
+import { testConnection } from './src/models/db';
+
 // after the .env file is created we'll modify the server.js file to use the environment
 // variables instead of hardcoding the values
 
@@ -69,9 +71,22 @@ app.get('/categories', (req, res) => {
     res.render('categories', { title });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
 
-    console.log(`Server is running at http://127.0.0.1:${PORT}`);
+    try {
 
-    console.log(`Environment: ${NODE_ENV}`);
+        await testConnection();
+
+        console.log(`Server is running at http://127.0.0.1:${PORT}`);
+
+        console.log(`Environment: ${NODE_ENV}`);
+
+    }
+
+    catch (error) {
+
+        console.error('Failed to start server:', error.message);
+
+    }
+
 });

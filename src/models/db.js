@@ -15,8 +15,11 @@ import { Pool } from "pg";
  * postgresql://username:password@host:port/database
  */
 const pool = new Pool({
+    
   connectionString: process.env.DB_URL,
+  
   ssl: true, // Enable SSL for secure connections to the database
+  
 });
 
 /**
@@ -109,23 +112,23 @@ if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING ===
  * Tests the database connection by executing a simple query.
  */
 const testConnection = async() => {
-    
+
     try {
-        
+
         const result = await db.query('SELECT NOW() as current_time');
-        
+
         console.log('Database connection successful:', result.rows[0].current_time);
-        
+
         return true;
-        
+
     } catch (error) {
-        
+
         console.error('Database connection failed:', error.message);
-        
+
         throw error;
-        
+
     }
-    
+
 };
 
 export { db as default, testConnection };
