@@ -1,7 +1,6 @@
-
 // this file will handle and call the database information from the server
 
-import { Pool } from "pg";
+import { Pool } from 'pg';
 
 /**
  * Connection pool for PostgreSQL database.
@@ -14,12 +13,13 @@ import { Pool } from "pg";
  * The connection string format is:
  * postgresql://username:password@host:port/database
  */
+
 const pool = new Pool({
-    
-  connectionString: process.env.DB_URL,
-  
-  ssl: true, // Enable SSL for secure connections to the database
-  
+
+    connectionString: process.env.DB_URL,
+
+    ssl: true
+
 });
 
 /**
@@ -44,6 +44,7 @@ const pool = new Pool({
 let db = null;
 
 if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING === 'true') {
+
     /**
      * In development mode, we wrap the pool to provide query logging.
      * This helps with debugging by showing all executed queries in the console.
@@ -64,13 +65,13 @@ if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING ===
 
                 const duration = Date.now() - start;
 
-                console.log('Executed query:', { 
+                console.log('Executed query:', {
 
-                    text: text.replace(/\s+/g, ' ').trim(), 
+                    text: text.replace(/\s+/g, ' ').trim(),
 
-                    duration: `${duration}ms`, 
+                    duration: `${duration}ms`,
 
-                    rows: res.rowCount 
+                    rows: res.rowCount
 
                 });
 
@@ -78,11 +79,11 @@ if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING ===
 
             } catch (error) {
 
-                console.error('Error in query:', { 
+                console.error('Error in query:', {
 
-                    text: text.replace(/\s+/g, ' ').trim(), 
+                    text: text.replace(/\s+/g, ' ').trim(),
 
-                    error: error.message 
+                    error: error.message
 
                 });
 
@@ -91,7 +92,6 @@ if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING ===
             }
 
         },
-
 
         async close() {
 
@@ -111,6 +111,7 @@ if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING ===
 /**
  * Tests the database connection by executing a simple query.
  */
+
 const testConnection = async() => {
 
     try {

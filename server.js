@@ -6,7 +6,9 @@ import { fileURLToPath } from 'url';
 
 import path from 'path';
 
-import { testConnection } from './src/models/db';
+import { testConnection } from './src/models/db.js';
+
+import { getAllOrganizations } from './src/models/organizations.js';
 
 // after the .env file is created we'll modify the server.js file to use the environment
 // variables instead of hardcoding the values
@@ -50,11 +52,16 @@ app.get('/', (req, res) => {
     res.render('home', { title });
 });
 
-app.get('/organizations', (req, res) => {
+app.get('/organizations', async (req, res) => {
+
+    const organizations = await getAllOrganizations();
+
+    // console.log('Retrieved organizations:', organizations);
 
     const title = 'Our Partner Organizations';
 
-    res.render('organizations', { title });
+    res.render('organizations', { title, organizations });
+    
 });
 
 app.get('/projects', (req, res) => {
@@ -73,20 +80,18 @@ app.get('/categories', (req, res) => {
 
 app.listen(PORT, async () => {
 
-    try {
+  try {
 
-        await testConnection();
+    await testConnection();
 
-        console.log(`Server is running at http://127.0.0.1:${PORT}`);
+    console.log(`Server is running at http://127.0.0.1:${PORT}`);
 
-        console.log(`Environment: ${NODE_ENV}`);
+    console.log(`Environment: ${NODE_ENV}`);
 
-    }
+  } catch (error) {
 
-    catch (error) {
+    console.error('Error connecting to the database:', error);
 
-        console.error('Failed to start server:', error.message);
-
-    }
+  }
 
 });
