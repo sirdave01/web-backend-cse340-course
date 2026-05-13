@@ -10,6 +10,8 @@ import { testConnection } from './src/models/db.js';
 
 import { getAllOrganizations } from './src/models/organizations.js';
 
+import { getAllProjects } from './src/models/projects.js';
+
 // after the .env file is created we'll modify the server.js file to use the environment
 // variables instead of hardcoding the values
 
@@ -64,11 +66,15 @@ app.get('/organizations', async (req, res) => {
     
 });
 
-app.get('/projects', (req, res) => {
+app.get('/projects', async (req, res) => {
+
+  const projects = await getAllProjects();
+  
+  // console.log('Retrieved projects:', projects);
 
     const title = 'Service Projects';
 
-    res.render('projects', { title });
+    res.render('projects', { title, projects });
 });
 
 app.get('/categories', (req, res) => {
