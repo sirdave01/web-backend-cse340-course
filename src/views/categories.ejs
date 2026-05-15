@@ -12,13 +12,11 @@
 
         <ul>
 
-            <li>Environmental</li>
+            <% categories.forEach(category => { %>
 
-            <li>Educational</li>
+                <li><%= category.category_name %></li>
 
-            <li>Community Service</li>
-
-            <li>Health and Wellness</li>
+            <% }); %>
 
         </ul>
 

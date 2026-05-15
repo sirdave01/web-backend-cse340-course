@@ -12,6 +12,8 @@ import { getAllOrganizations } from './src/models/organizations.js';
 
 import { getAllProjects } from './src/models/projects.js';
 
+import { getAllCategories } from './src/models/categories.js';
+
 // after the .env file is created we'll modify the server.js file to use the environment
 // variables instead of hardcoding the values
 
@@ -77,11 +79,15 @@ app.get('/projects', async (req, res) => {
     res.render('projects', { title, projects });
 });
 
-app.get('/categories', (req, res) => {
+app.get('/categories', async (req, res) => {
+
+  const categories = await getAllCategories();
+
+  console.log('Retrieved categories:', categories);
 
     const title = 'Service Categories';
 
-    res.render('categories', { title });
+    res.render('categories', { title, categories });
 });
 
 app.listen(PORT, async () => {
