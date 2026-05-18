@@ -8,13 +8,7 @@ import path from 'path';
 
 import { testConnection } from './src/models/db.js';
 
-import { getAllOrganizations } from './src/models/organizations.js';
-
-import { getAllProjects } from './src/models/projects.js';
-
-import { getAllCategories } from './src/models/categories.js';
-import { title } from 'process';
-import { stat } from 'fs';
+import router from './src/routes.js';
 
 // after the .env file is created we'll modify the server.js file to use the environment
 // variables instead of hardcoding the values
@@ -82,58 +76,8 @@ app.use((req, res, next) => {
 
 // dynamically populating the page titles
 
-app.get('/', (req, res) => {
+app.use(router); // Use the router for all routes defined in src/routes.js
 
-    const title = 'Home';
-
-    res.render('home', { title });
-});
-
-app.get('/organizations', async (req, res) => {
-
-    const organizations = await getAllOrganizations();
-
-    // console.log('Retrieved organizations:', organizations);
-
-    const title = 'Our Partner Organizations';
-
-    res.render('organizations', { title, organizations });
-    
-});
-
-app.get('/projects', async (req, res) => {
-
-  const projects = await getAllProjects();
-  
-  // console.log('Retrieved projects:', projects);
-
-    const title = 'Service Projects';
-
-    res.render('projects', { title, projects });
-});
-
-app.get('/categories', async (req, res) => {
-
-  const categories = await getAllCategories();
-
-  // console.log('Retrieved categories:', categories);
-
-    const title = 'Service Categories';
-
-    res.render('categories', { title, categories });
-});
-
-// test route to check for 500 errors
-
-app.get('/test-error', (req, res, next) => {
-
-  const err = new Error('This is a test error');
-
-  err.status = 500;
-
-  next(err);
-
-});
 
 // adding the catch-all error route for 404 errors
 
