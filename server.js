@@ -43,6 +43,39 @@ app.set('view engine', 'ejs');
 // Tell Express where to find your templates
 app.set('views', path.join(__dirname, 'src/views'));
 
+// adding the middleware come after the view engine and views configuration
+// because the middleware needs to be set up before the routes are defined,
+// and the view engine and views configuration need to be set up before the middleware
+// is defined. This is because the middleware will be used to serve static files and handle
+// requests, while the view engine and views configuration will be used to render the
+// templates for the routes. If the middleware is defined before the view engine and views
+// configuration, it may not work properly because it may not have access to the necessary resources.
+
+app.use((req, res, next) => {
+  
+  if (NODE_ENV === 'development') {
+
+    console.log(`${req.method} ${req.url}`);
+
+  }
+
+  next(); //pass control to the next middleware function or route handler
+
+});
+
+// middleware function to make NODE_ENV available in all EJS templates
+
+app.use((req, res, next) => {
+
+  res.locals.NODE_ENV = NODE_ENV;
+
+  next();
+  
+});
+
+
+
+
 /**
   * Routes
   */
@@ -83,7 +116,7 @@ app.get('/categories', async (req, res) => {
 
   const categories = await getAllCategories();
 
-  console.log('Retrieved categories:', categories);
+  // console.log('Retrieved categories:', categories);
 
     const title = 'Service Categories';
 
