@@ -13,6 +13,8 @@ import { getAllOrganizations } from './src/models/organizations.js';
 import { getAllProjects } from './src/models/projects.js';
 
 import { getAllCategories } from './src/models/categories.js';
+import { title } from 'process';
+import { stat } from 'fs';
 
 // after the .env file is created we'll modify the server.js file to use the environment
 // variables instead of hardcoding the values
@@ -70,10 +72,8 @@ app.use((req, res, next) => {
   res.locals.NODE_ENV = NODE_ENV;
 
   next();
-  
+
 });
-
-
 
 
 /**
@@ -121,6 +121,66 @@ app.get('/categories', async (req, res) => {
     const title = 'Service Categories';
 
     res.render('categories', { title, categories });
+});
+
+// test route to check for 500 errors
+
+app.get('/test-error', (req, res, next) => {
+
+  const err = new Error('This is a test error');
+
+  err.status = 500;
+
+  next(err);
+
+});
+
+// adding the catch-all error route for 404 errors
+
+app.use((req, res, next) => {
+
+  const err = new Error('Page Not Found');
+
+  err.status = 404;
+
+  next(err);
+
+});
+
+// creating the global error handler middleware to
+// catch any errors that occur in the routes and send a response to the client
+
+app.use((err, req, res, next) => {
+
+  // log error details for debugging
+
+  console.error('Error Occurred:', err.message);
+
+
+  console.error('Stack Trace:', err.stack);
+
+  // Determine status and template based on error type
+  
+  const status = err.status || 500;
+
+  const template = status === 404 ? '404' : '500';
+
+  // Prepare data for the template
+
+  const context = {
+
+    title: status === 404 ? 'Page Not Found' : 'Server Error',
+
+    error: err.message,
+
+    stack: err.stack
+
+  };
+
+  // Render the appropriate error template with the context data
+  
+  res.status(status).render(`errors/${template}`, context);
+
 });
 
 app.listen(PORT, async () => {
