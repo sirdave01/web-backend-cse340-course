@@ -1,6 +1,8 @@
 // importing the db handler for organizations page
 
-import { getAllOrganizations } from '../models/organizations.js';
+import { getAllOrganizations, getOrganizationDetails } from '../models/organizations.js';
+
+import { getProjectsByOrganizationId } from '../models/projects.js';
 
 // Defining controller functions for the homepage called showOrganizationsPage
 
@@ -18,4 +20,21 @@ const showOrganizationsPage = async (req, res) => {
 
 };
 
-export { showOrganizationsPage };
+// adding a new controller function for showing the details of an organization when its
+//  name is clicked on the organizations page
+
+const showOrganizationDetailsPage = async (req, res) => {
+
+    const organizationId = req.params.id;
+
+    const organization = await getOrganizationDetails(organizationId);
+
+    const projects = await getProjectsByOrganizationId(organizationId);
+
+    const title = 'Organization Details';
+
+    res.render('organization', { title, getOrganizationDetails, projects });
+
+};
+
+export { showOrganizationsPage, showOrganizationDetailsPage };

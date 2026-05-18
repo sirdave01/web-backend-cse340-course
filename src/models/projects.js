@@ -6,12 +6,19 @@ import db from './db.js';
 const getAllProjects = async () => {
 
     const query = `
+
         SELECT
+
         p.project_id,
+
         p.title,
+
         p.description,
+
         p.location,
-        p.project_date,
+
+        p.project_date AS date,
+
         o.name AS organization_name
 
         FROM projects p
@@ -25,4 +32,38 @@ const getAllProjects = async () => {
 
 };
 
-export { getAllProjects };
+// creating a new function for retrieving service projects associated with an organization in it
+    
+const getProjectsByOrganizationId = async (organizationId) => {
+
+    const query = `
+
+        SELECT
+
+            p.project_id,
+
+            p.title,
+
+            p.description,
+
+            p.location,
+
+            p.project_date AS date
+
+        FROM projects p
+
+        WHERE p.organization_id = $1
+        
+        ORDER BY p.project_date DESC;
+
+    `;
+
+    const queryParams = [organizationId];
+
+    const result = await db.query(query, queryParams);
+
+    return result.rows;
+
+};
+
+export { getAllProjects, getProjectsByOrganizationId };
