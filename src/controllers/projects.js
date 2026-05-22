@@ -18,4 +18,11 @@ const showProjectsPage = async (req, res) => {
     
 };
 
-export { showProjectsPage };
+// Create a new function getUpcomingProjects(number_of_projects) 
+// that will retrieve the next number_of_projects upcoming service projects from the database
+
+const getUpcomingProjects = async (number_of_projects) => {
+  // Implementation for retrieving upcoming projects
+};
+
+export { showProjectsPage, getUpcomingProjects };
