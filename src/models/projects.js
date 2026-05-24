@@ -66,4 +66,65 @@ const getProjectsByOrganizationId = async (organizationId) => {
 
 };
 
-export { getAllProjects, getProjectsByOrganizationId };
+// Create a new function getUpcomingProjects(number_of_projects) 
+// that will retrieve the next number_of_projects upcoming service projects from the database
+
+const getUpcomingProjects = async (number_of_projects) => {
+
+    // Implementation for retrieving upcoming projects
+    
+    const query = `
+
+        SELECT
+            p.project_id,
+
+            p.title,
+
+            p.description,
+
+            p.location,
+
+            p.project_date AS date,
+
+            o.name AS organization_name
+        
+        FROM projects p
+        JOIN organizations o ON p.organization_id = o.organization_id
+        WHERE p.project_date >= CURRENT_DATE
+        ORDER BY p.project_date ASC
+        LIMIT $1;
+    `;
+
+    const result = await db.query(query, [number_of_projects]);
+
+    return result.rows;
+
+};
+
+// Create a new function getProjectDetails(id) that will retrieve a single service project by its ID
+
+const getProjectDetails = async (id) => {
+
+    // Implementation for retrieving project details
+    
+    const query = `
+
+        SELECT
+            p.project_id,
+            p.title,
+            p.description,
+            p.location,
+            p.project_date AS date,
+            o.name AS organization_name
+        FROM projects p
+        JOIN organizations o ON p.organization_id = o.organization_id
+        WHERE p.project_id = $1
+    `;
+
+    const result = await db.query(query, [id]);
+
+    return result.rows[0] || null;
+
+};
+
+export { getAllProjects, getProjectsByOrganizationId, getUpcomingProjects, getProjectDetails };

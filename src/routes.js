@@ -6,7 +6,7 @@ import { showHomePage } from './controllers/index.js';
 
 import { showOrganizationsPage, showOrganizationDetailsPage } from './controllers/organizations.js';
 
-import { showProjectsPage } from './controllers/projects.js';
+import { showProjectsPage, showProjectDetailsPage, showUpcomingProjectsPage } from './controllers/projects.js';
 
 import { showCategoriesPage } from './controllers/categories.js';
 
@@ -25,6 +25,10 @@ router.get('/organizations', showOrganizationsPage);
 router.get('/organizations/:id', showOrganizationDetailsPage);
 
 router.get('/projects', showProjectsPage);
+
+router.get('/projects/upcoming', showUpcomingProjectsPage);
+
+router.get('/project/:id', showProjectDetailsPage);
 
 router.get('/categories', showCategoriesPage);
 
