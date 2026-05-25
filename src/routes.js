@@ -8,7 +8,7 @@ import { showOrganizationsPage, showOrganizationDetailsPage } from './controller
 
 import { showProjectsPage, showProjectDetailsPage, showUpcomingProjectsPage } from './controllers/projects.js';
 
-import { showCategoriesPage } from './controllers/categories.js';
+import { showCategoriesPage, showCategoryDetailsPage } from './controllers/categories.js';
 
 import { testErrorPage } from './controllers/errors.js';
 
@@ -18,19 +18,21 @@ const router = express.Router();
 
 // middleware function to make the current year available in all EJS templates
 
+// main routes
 router.get('/', showHomePage);
 
+// organizations routes
 router.get('/organizations', showOrganizationsPage);
-
 router.get('/organizations/:id', showOrganizationDetailsPage);
 
+// projects routes
 router.get('/projects', showProjectsPage);
-
 router.get('/projects/upcoming', showUpcomingProjectsPage);
-
 router.get('/project/:id', showProjectDetailsPage);
 
-router.get('/categories', showCategoriesPage);
+// categories routes
+router.get('/categories', showCategoriesPage);  
+router.get('/categories/:id', showCategoryDetailsPage);
 
 router.get('/test-error', testErrorPage);
 

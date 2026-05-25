@@ -2,6 +2,8 @@
 
 import { getAllProjects, getUpcomingProjects, getProjectDetails } from '../models/projects.js';
 
+import { getcategoriesByProjectId } from '../models/categories.js';
+
 // Defining controller functions for the projects page called showProjectsPage
 
 const showProjectsPage = async (req, res) => {
@@ -38,13 +40,15 @@ const showProjectDetailsPage = async (req, res) => {
 
     const project = await getProjectDetails(id);
 
+    const categories = await getcategoriesByProjectId(id);
+
     if (!project) {
         return res.status(404).render('error', { message: 'Project not found' });
     }
 
     const title = project.title;
 
-    res.render('project-details', { title, project });
+    res.render('project-details', { title, project, categories });
 
 };
 
