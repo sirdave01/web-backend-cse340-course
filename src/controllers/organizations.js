@@ -25,16 +25,28 @@ const showOrganizationsPage = async (req, res) => {
 
 const showOrganizationDetailsPage = async (req, res) => {
 
-    const organizationId = req.params.id;
+    const { id } = req.params;
+    
+    console.log(`🔍 [ORG] Looking for organization ID: ${id}`);
 
-    const organization = await getOrganizationDetails(organizationId);
+    const organization = await getOrganizationDetails(id);
+    const projects = await getProjectsByOrganizationId(id);
 
-    const projects = await getProjectsByOrganizationId(organizationId);
+    console.log(`✅ [ORG] Organization found:`, organization ? 'YES' : 'NO');
+    if (organization) {
+        console.log(`   Name: ${organization.name}`);
+    }
 
-    const title = 'Organization Details';
+    if (!organization) {
+        console.log(`❌ [ORG] Organization ID ${id} NOT found`);
+        return res.status(404).render('error', { 
+            message: `Organization with ID ${id} not found` 
+        });
+    }
 
-    res.render('organization', { title, getOrganizationDetails, projects });
+    const title = organization.name || 'Organization Details';
 
+    res.render('organization', { title, organization, projects });
 };
 
 export { showOrganizationsPage, showOrganizationDetailsPage };

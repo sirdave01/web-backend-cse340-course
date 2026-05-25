@@ -1,6 +1,6 @@
 // importing the db handler for categories page
 
-import { getAllCategories, getCategoriesByProjectId, getCategoryById, getProjectsByCategoryId } from '../models/categories.js';
+import { getAllCategories, getCategoryById, getProjectsByCategoryId } from '../models/categories.js';
 
 // Defining controller functions for the homepage called showCategoriesPage
 
@@ -24,11 +24,11 @@ const showCategoriesPage = async (req, res) => {
 
 const showCategoryDetailsPage = async (req, res) => {
 
-  const categoryId = req.params;
+  const { id } = req.params;
   
-  const category = await getCategoryById(categoryId);
+  const category = await getCategoryById(id);
 
-  const projects = await getProjectsByCategoryId(categoryId);
+  const projects = await getProjectsByCategoryId(id);
 
   /**
   * checking if the category exists, if not render an error page with a 404 status code and a message "Category not found"
@@ -42,7 +42,7 @@ const showCategoryDetailsPage = async (req, res) => {
 
     const title = category.category_name;
 
-    res.render('category-details', { 
+    res.render('category', { 
         title, 
         category, 
         projects 

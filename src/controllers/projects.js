@@ -2,7 +2,7 @@
 
 import { getAllProjects, getUpcomingProjects, getProjectDetails } from '../models/projects.js';
 
-import { getcategoriesByProjectId } from '../models/categories.js';
+import { getCategoriesByProjectId } from '../models/categories.js';
 
 // Defining controller functions for the projects page called showProjectsPage
 
@@ -38,9 +38,13 @@ const showProjectDetailsPage = async (req, res) => {
 
     const { id } = req.params;
 
+    console.log(`🔍 Looking for project with ID: ${id}`);
+
     const project = await getProjectDetails(id);
 
-    const categories = await getcategoriesByProjectId(id);
+    const categories = await getCategoriesByProjectId(id);
+
+    console.log(`Project found:`, project);
 
     if (!project) {
         return res.status(404).render('error', { message: 'Project not found' });
@@ -48,7 +52,7 @@ const showProjectDetailsPage = async (req, res) => {
 
     const title = project.title;
 
-    res.render('project-details', { title, project, categories });
+    res.render('project', { title, project, categories });
 
 };
 

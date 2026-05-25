@@ -53,13 +53,9 @@ const getOrganizationDetails = async (organizationId) => {
 
     `;
 
-    const queryParams = [organizationId];
+    const result = await db.query(query, [organizationId]);
 
-    const result = await db.query(query, queryParams);
-
-    // return the first row of the result set, or null if  no rows were found
-
-    return result.rows.length > 0 ? result.rows[0] : null;
+    return result.rows[0] || null;
 
 };
 
