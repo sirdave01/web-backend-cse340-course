@@ -49,4 +49,26 @@ const showOrganizationDetailsPage = async (req, res) => {
     res.render('organization', { title, organization, projects });
 };
 
-export { showOrganizationsPage, showOrganizationDetailsPage };
+const showNewOrganizationForm = (req, res) => {
+
+    const title = 'Add New Organization';
+
+    res.render('new-organization', { title });
+
+};
+
+// new controller for processing the POST form submission
+
+const processNewOrganizationForm = async (req, res) => {
+
+    const { name, description, contactEmail } = req.body;
+
+    const logoFilename = 'placeholder-logo.png'; // Use the placeholder logo for all new organizations
+
+    const organizationId = await createOrganization(name, description, contactEmail, logoFilename);
+
+    res.redirect(`/organization/${organizationId}`);
+
+};
+
+export { showOrganizationsPage, showOrganizationDetailsPage, showNewOrganizationForm, processNewOrganizationForm };

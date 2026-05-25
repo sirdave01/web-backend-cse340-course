@@ -5,7 +5,7 @@ import db from './db.js';
 
 /**
  * Get all categories
- * @returns {Promise<Array>} Array of category objects
+ * Array of category objects
  */
 
 const getAllCategories = async () => {

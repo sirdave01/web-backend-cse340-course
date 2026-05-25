@@ -4,7 +4,7 @@ import express from 'express';
 
 import { showHomePage } from './controllers/index.js';
 
-import { showOrganizationsPage, showOrganizationDetailsPage } from './controllers/organizations.js';
+import { showOrganizationsPage, showOrganizationDetailsPage, showNewOrganizationForm } from './controllers/organizations.js';
 
 import { showProjectsPage, showProjectDetailsPage, showUpcomingProjectsPage } from './controllers/projects.js';
 
@@ -24,6 +24,9 @@ router.get('/', showHomePage);
 // organizations routes
 router.get('/organizations', showOrganizationsPage);
 router.get('/organizations/:id', showOrganizationDetailsPage);
+
+// new organization form route
+router.get('/new-organization', showNewOrganizationForm);
 
 // projects routes
 router.get('/projects', showProjectsPage);
