@@ -29,7 +29,7 @@ router.get('/organizations/:id', showOrganizationDetailsPage);
 router.get('/new-organization', showNewOrganizationForm);
 
 // POST route for processing the new organization form submission
-router.post('/new-organization', processNewOrganizationForm); 
+router.post('/new-organization', processNewOrganizationForm);
 
 // projects routes
 router.get('/projects', showProjectsPage);
