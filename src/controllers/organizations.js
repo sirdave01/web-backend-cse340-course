@@ -1,6 +1,6 @@
 // importing the db handler for organizations page
 
-import { getAllOrganizations, getOrganizationDetails } from '../models/organizations.js';
+import { getAllOrganizations, getOrganizationDetails, createOrganization } from '../models/organizations.js';
 
 import { getProjectsByOrganizationId } from '../models/projects.js';
 
