@@ -2,6 +2,10 @@
 
 import express from 'express';
 
+import session from 'express-session';
+
+import flash from './src/middleware/flash.js';
+
 import { fileURLToPath } from 'url';
 
 import path from 'path';
@@ -17,6 +21,8 @@ const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 
 const PORT = process.env.PORT || 3000;
 
+const SESSION_SECRET = process.env.SESSION_SECRET;
+
 // creating the __filename and __dirname variables to be used in the server.js file to get
 // the current file name and directory name
 
@@ -26,15 +32,34 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+/**
+  * Configure Express middleware
+  */
+
+// Set up session management
+
+app.use(session({
+
+    secret: SESSION_SECRET,
+
+    resave: false,
+
+    saveUninitialized: true,
+
+  cookie: { maxAge: 60 * 60 * 1000 } // Session expires after 1 hour of inactivity
+    
+}));
+
+// use flashmessage middleware to handle flash messages in the application
+
+app.use(flash);
+
+
 // Allow Express to receive and process common POST data
 
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
-
-/**
-  * Configure Express middleware
-  */
 
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -52,6 +77,15 @@ app.set('views', path.join(__dirname, 'src/views'));
 // requests, while the view engine and views configuration will be used to render the
 // templates for the routes. If the middleware is defined before the view engine and views
 // configuration, it may not work properly because it may not have access to the necessary resources.
+
+// Set up session management
+app.use(session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60 * 60 * 1000 } // Session expires after 1 hour of inactivity
+}));
+
 
 app.use((req, res, next) => {
   
