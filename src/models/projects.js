@@ -127,4 +127,39 @@ const getProjectDetails = async (id) => {
 
 };
 
-export { getAllProjects, getProjectsByOrganizationId, getUpcomingProjects, getProjectDetails };
+// This createProject function will accept the following parameters:
+// title, description, location, date, and organizationId.
+
+const createProject = async (title, description, location, date, organizationId) => { 
+
+    // the function will execute an SQL INSERT statement to add a new
+    // record to the projects table in the database using the provided parameters
+    
+    const query = `
+        INSERT INTO projects (title, description, location, date, organization_id)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING project_id
+    `;
+
+    const queryParams = [title, description, location, date, organizationId];
+
+    const result = await db.query(query, queryParams);
+
+    // check if the insert was successful and return the new project ID
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create project');
+    }
+
+    // check if the process.env is true in the ENABLE_SQL_LOGGING
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Created new project with ID:', result.rows[0].project_id);
+    }
+
+    // return the result of the query, which includes the new project ID
+
+    return result.rows[0].project_id;
+};
+
+export { getAllProjects, getProjectsByOrganizationId, getUpcomingProjects, getProjectDetails, createProject };
