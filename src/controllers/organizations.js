@@ -1,6 +1,9 @@
 // importing the db handler for organizations page
 
-import { getAllOrganizations, getOrganizationDetails, createOrganization } from '../models/organizations.js';
+import {
+    getAllOrganizations, getOrganizationDetails,
+    createOrganization, updateOrganization
+} from '../models/organizations.js';
 
 import { getProjectsByOrganizationId } from '../models/projects.js';
 
@@ -131,4 +134,34 @@ const processNewOrganizationForm = async (req, res) => {
     res.redirect(`/organizations/${organizationId}`);
 };
 
-export { showOrganizationsPage, showOrganizationDetailsPage, showNewOrganizationForm, processNewOrganizationForm, organizationValidation };
+const showEditOrganizationForm = async (req, res) => {
+
+    const organizationId = req.params.id;
+
+    const organization = await getOrganizationDetails(organizationId);
+
+    const title = 'Edit Organization';
+
+    res.render('edit-organization', { title, organization });
+};
+
+const processEditOrganizationForm = async (req, res) => {
+
+    // This function will handle the form submission for editing an organization
+    // It will be similar to processNewOrganizationForm but will update an existing record instead of creating a new one
+
+    const organizationId = req.params.id;
+
+    const { name, description, contactEmail, logoFilename } = req.body;
+
+    await updateOrganization(organizationId, name, description, contactEmail, logoFilename);
+
+    // set a flash message to indicate success
+
+    req.flash('success', 'Organization updated successfully!');
+
+    res.redirect(`/organizations/${organizationId}`);
+
+};
+
+export { showOrganizationsPage, showOrganizationDetailsPage, showNewOrganizationForm, processNewOrganizationForm, organizationValidation, showEditOrganizationForm, processEditOrganizationForm };
