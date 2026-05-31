@@ -152,6 +152,23 @@ const processEditOrganizationForm = async (req, res) => {
 
     const organizationId = req.params.id;
 
+    // Check for validation errors
+    const results = validationResult(req);
+
+    if (!results.isEmpty()) {
+
+        // Validation failed - flash error messages
+
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        // Redirect back to the edit form
+        return res.redirect(`/edit-organization/${organizationId}`);
+    }
+
+    // No errors? Great - proceed with updating the organization
+    
     const { name, description, contactEmail, logoFilename } = req.body;
 
     await updateOrganization(organizationId, name, description, contactEmail, logoFilename);

@@ -40,7 +40,7 @@ router.get('/new-organization', showNewOrganizationForm);
 router.post('/new-organization', organizationValidation, processNewOrganizationForm);
 
 // Route to handle the edit organization form submission
-router.post('/edit-organization/:id', processEditOrganizationForm);
+router.post('/edit-organization/:id', organizationValidation, processEditOrganizationForm);
 
 // projects routes
 router.get('/projects', showProjectsPage);
