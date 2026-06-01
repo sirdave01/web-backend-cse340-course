@@ -90,7 +90,7 @@ const processNewProjectForm = async (req, res) => {
 
         req.flash('success', 'Project created successfully!');
 
-        res.redirect('/projects');
+        res.redirect(`/projects/${newProjectId}`);
 
     } catch (error) {
 
@@ -98,11 +98,10 @@ const processNewProjectForm = async (req, res) => {
 
         req.flash('error', 'Failed to create project. Please try again.');
 
-        res.redirect('/projects/new');
+        res.redirect('/new-project');
 
     }
 
 };
-
 
 export { showProjectsPage, showUpcomingProjectsPage, showProjectDetailsPage, showNewProjectForm, processNewProjectForm };
