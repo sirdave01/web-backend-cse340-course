@@ -81,11 +81,12 @@ const showNewProjectForm = async (req, res) => {
 
 const processNewProjectForm = async (req, res) => {
 
-    const { organizationId, title, description, location, date } = req.body;
+    const { title, description, location, date, organizationId } = req.body;
 
     try {
 
-        await createProject(organizationId, title, description, location, date);
+        // Create the new project in the database
+        const newProjectId = await createProject(title, description, location, date, organizationId);
 
         req.flash('success', 'Project created successfully!');
 
