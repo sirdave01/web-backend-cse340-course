@@ -62,7 +62,26 @@ const showCategoryDetailsPage = async (req, res) => {
 // Finally, it should render a view assign-categories (to be created in the next step)
 // and pass the project details, all categories, and the assigned categories to the view.
 
-const showAssignCategoriesForm = async (req, res) => { };
+const showAssignCategoriesForm = async (req, res) => { 
+
+  const { projectId } = req.params.projectId;
+
+  const project = await getProjectDetails(projectId);
+
+  const categories = await getAllCategories();
+
+  const assignedCategories = await getCategoriesByServiceProjectId(projectId);
+
+  const title = 'Assign Categories to Project';
+
+  res.render('assign-categories', { 
+    title, 
+    project, 
+    categories, 
+    assignedCategories 
+  });
+  
+};
 
 
 // Create a new function processAssignCategoriesForm.
