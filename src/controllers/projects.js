@@ -60,56 +60,93 @@ const flashValidationErrors = (req, errors) => {
 // Defining controller functions for the projects page called showProjectsPage
 
 const showProjectsPage = async (req, res) => {
+
     try {
+
         const projects = await getAllProjects();
+
         res.render('projects', { title: 'Service Projects', projects });
+
     } catch (error) {
+
         console.error('Error loading projects:', error);
+
         res.status(500).render('error', { message: 'Unable to load service projects.' });
+
     }
+
 };
 
 const showUpcomingProjectsPage = async (req, res) => {
+
     try {
+
         const number_of_projects = 5;
+
         const upcomingProjects = await getUpcomingProjects(number_of_projects);
+
         res.render('upcoming-projects', { title: 'Upcoming Service Projects', upcomingProjects });
+
     } catch (error) {
+
         console.error('Error loading upcoming projects:', error);
+
         res.status(500).render('error', { message: 'Unable to load upcoming projects.' });
+
     }
+
 };
 
 const showProjectDetailsPage = async (req, res) => {
+
     const projectId = Number(req.params.id);
 
     if (!Number.isInteger(projectId)) {
+
         return res.status(404).render('error', { message: 'Project not found' });
+
     }
 
     try {
+
         const project = await getProjectDetails(projectId);
+
         const categories = await getCategoriesByProjectId(projectId);
 
         if (!project) {
+
             return res.status(404).render('error', { message: 'Project not found' });
+
         }
 
         res.render('project', { title: project.title, project, categories });
+
     } catch (error) {
+
         console.error('Error loading project details:', error);
+
         res.status(500).render('error', { message: 'Unable to load project details.' });
+
     }
+
 };
 
 const showNewProjectForm = async (req, res) => {
+
     try {
+
         const organizations = await getAllOrganizations();
+
         res.render('new-project', { title: 'Create New Project', organizations });
+
     } catch (error) {
+
         console.error('Error loading new project form:', error);
+
         res.status(500).render('error', { message: 'Unable to load project creation form.' });
+
     }
+
 };
 
 
@@ -120,29 +157,47 @@ const showNewProjectForm = async (req, res) => {
 // Redirect the user back to the main service project list page.
 
 const processNewProjectForm = async (req, res) => {
+
     const { title, description, location, date } = req.body;
+
     const organizationId = parseInt(req.body.organizationId, 10);
 
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
+
         flashValidationErrors(req, errors);
+
         return res.redirect('/new-project');
+
     }
 
     if (Number.isNaN(organizationId)) {
+
         req.flash('error', 'Please select a valid organization.');
+
         return res.redirect('/new-project');
+
     }
 
     try {
+        
         const newProjectId = await createProject(title, description, location, date, organizationId);
+        
         req.flash('success', 'Project created successfully!');
+        
         return res.redirect('/projects');
+        
     } catch (error) {
+        
         console.error('Error creating project:', error);
+        
         req.flash('error', 'Failed to create project. Please try again.');
+        
         return res.redirect('/new-project');
+        
     }
+    
 };
 
 export {
