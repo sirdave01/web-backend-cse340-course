@@ -1,6 +1,12 @@
 // importing the db handler for categories page
 
-import { getAllCategories, getCategoryById, getProjectsByCategoryId } from '../models/categories.js';
+import {
+  getAllCategories, getCategoryById,
+  getProjectsByCategoryId, getCategoriesByProjectId,
+  updateCategoryAssignments
+} from '../models/categories.js';
+
+import { getProjectDetails } from '../models/projects.js';
 
 // Defining controller functions for the homepage called showCategoriesPage
 
@@ -56,7 +62,7 @@ const showCategoryDetailsPage = async (req, res) => {
 // (You will likely need to add this to your list of imports from the project model file).
 // It should also retrieve all categories using the existing getAllCategories model function.
 // Additionally, it should retrieve the categories currently assigned to the project using the existing
-// getCategoriesByServiceProjectId model function. (You will likely need to add this to your list of imports
+// getCategoriesByProjectId model function. (You will likely need to add this to your list of imports
 // from the categories model file.)
 // It should set the title variable to be, "Assign Categories to Project"
 // Finally, it should render a view assign-categories (to be created in the next step)
@@ -64,13 +70,13 @@ const showCategoryDetailsPage = async (req, res) => {
 
 const showAssignCategoriesForm = async (req, res) => { 
 
-  const { projectId } = req.params.projectId;
+  const { projectId } = req.params;
 
   const project = await getProjectDetails(projectId);
 
   const categories = await getAllCategories();
 
-  const assignedCategories = await getCategoriesByServiceProjectId(projectId);
+  const assignedCategories = await getCategoriesByProjectId(projectId);
 
   const title = 'Assign Categories to Project';
 
@@ -80,7 +86,7 @@ const showAssignCategoriesForm = async (req, res) => {
     categories, 
     assignedCategories 
   });
-  
+
 };
 
 
@@ -94,7 +100,49 @@ const showAssignCategoriesForm = async (req, res) => {
 // Set a success flash message.
 // Redirect the user back to the project details page /project/{projectId}.
 
-const processAssignCategoriesForm = async (req, res) => { };
+const processAssignCategoriesForm = async (req, res) => { 
+
+  const { projectId } = req.params;
+
+  let selectedCategoryIds = req.body.categories || [];
+    
+    // Ensure it's always an array and convert to numbers
+    if (!Array.isArray(selectedCategoryIds)) {
+
+        selectedCategoryIds = [selectedCategoryIds];
+
+    }
+    
+    // Convert to integers (important for SQL)
+    const categoryIdsArray = selectedCategoryIds
+
+        .map(id => parseInt(id, 10))
+
+        .filter(id => !isNaN(id));
+
+    try {
+        await updateCategoryAssignments(projectId, categoryIdsArray);
+
+        req.flash('success', 'Categories updated successfully.');
+
+        res.redirect(`/project/${projectId}`);
+
+    } catch (error) {
+
+        console.error(error);
+
+        req.flash('error', 'Failed to update categories.');
+
+        res.redirect(`/project/${projectId}`);
+
+    }
+  
+};
 
 
-export { showCategoriesPage, showCategoryDetailsPage, showAssignCategoriesForm, processAssignCategoriesForm };
+export {
+  showCategoriesPage,
+  showCategoryDetailsPage,
+  showAssignCategoriesForm,
+  processAssignCategoriesForm
+};
