@@ -163,10 +163,46 @@ const getCategoriesWithCount = async () => {
 
 };
 
+// this function assigns a category to a project in the many-to-many relationship table
+
+const assignCategoryToProject = async (categoryId, projectId) => {
+
+    const query = `
+        INSERT INTO project_categories (category_id, project_id)
+        VALUES ($1, $2)
+    `;
+    await db.query(query, [categoryId, projectId]);
+};
+
+// updateCategoryAssignments that updates the categories assigned to a project
+
+const updateCategoryAssignments = async (projectId, categoryIds) => {
+
+    // First, delete existing category assignments for the project
+    const deleteQuery = `
+        DELETE FROM project_categories
+        WHERE project_id = $1
+    `;
+    await db.query(deleteQuery, [projectId]);
+
+    // Then, insert the new category assignments
+    const insertQueries = categoryIds.map((categoryId) => {
+        const query = `
+            INSERT INTO project_categories (category_id, project_id)
+            VALUES ($1, $2)
+        `;
+        return db.query(query, [categoryId, projectId]);
+    });
+
+    await Promise.all(insertQueries);
+};
+
 export { 
     getAllCategories,
     getCategoryById,
     getCategoriesByProjectId,
     getProjectsByCategoryId,
-    getCategoriesWithCount
+    getCategoriesWithCount,
+    assignCategoryToProject,
+    updateCategoryAssignments
 };

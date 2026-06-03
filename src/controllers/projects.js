@@ -6,70 +6,110 @@ import { getCategoriesByProjectId } from '../models/categories.js';
 
 import { getAllOrganizations } from '../models/organizations.js';
 
+import { body, validationResult } from 'express-validator';
+
+// title: trim, ensure not empty, length between 3 and 200.
+// description: trim, ensure not empty, length less than 1000.
+// location: trim, ensure not empty, length less than 200.
+// date: ensure not empty, valid date format.
+// organizationId: ensure not empty, valid integer.
+
+const projectValidation = [
+
+    body('title')
+        .trim()
+        .notEmpty()
+        .withMessage('Project title is required')
+        .isLength({ min: 3, max: 200 })
+        .withMessage('Project title must be between 3 and 200 characters'),
+    
+    body('description')
+        .trim()
+        .notEmpty()
+        .withMessage('Project description is required')
+        .isLength({ max: 1000 })
+        .withMessage('Project description cannot exceed 1000 characters'),
+    
+    body('location')
+        .trim()
+        .notEmpty()
+        .withMessage('Project location is required')
+        .isLength({ max: 200 })
+        .withMessage('Project location cannot exceed 200 characters'),
+    
+    body('date')
+        .notEmpty()
+        .withMessage('Project date is required')
+        .isISO8601()
+        .withMessage('Please provide a valid date in YYYY-MM-DD format'),
+    
+    body('organizationId')
+        .notEmpty()
+        .withMessage('Organization is required')
+        .isInt()
+        .withMessage('Please select a valid organization')
+    
+];
+
+const flashValidationErrors = (req, errors) => {
+    errors.array().forEach((error) => {
+        req.flash('error', error.msg);
+    });
+};
+
 // Defining controller functions for the projects page called showProjectsPage
 
 const showProjectsPage = async (req, res) => {
-
-  // Implementation for showing projects page
-
-    const projects = await getAllProjects();
-
-    const title = 'Service Projects';
-
-    res.render('projects', { title, projects });
-    
+    try {
+        const projects = await getAllProjects();
+        res.render('projects', { title: 'Service Projects', projects });
+    } catch (error) {
+        console.error('Error loading projects:', error);
+        res.status(500).render('error', { message: 'Unable to load service projects.' });
+    }
 };
-
-// show upcoming projects page
 
 const showUpcomingProjectsPage = async (req, res) => {
-
-    const number_of_projects = 5; // You can adjust this number as needed
-
-    const upcomingProjects = await getUpcomingProjects(number_of_projects);
-
-    const title = 'Upcoming Service Projects';
-
-    res.render('upcoming-projects', { title, upcomingProjects });
-
+    try {
+        const number_of_projects = 5;
+        const upcomingProjects = await getUpcomingProjects(number_of_projects);
+        res.render('upcoming-projects', { title: 'Upcoming Service Projects', upcomingProjects });
+    } catch (error) {
+        console.error('Error loading upcoming projects:', error);
+        res.status(500).render('error', { message: 'Unable to load upcoming projects.' });
+    }
 };
 
-// show project details page
-
 const showProjectDetailsPage = async (req, res) => {
+    const projectId = Number(req.params.id);
 
-    const { id } = req.params;
-
-    console.log(`🔍 Looking for project with ID: ${id}`);
-
-    const project = await getProjectDetails(id);
-
-    const categories = await getCategoriesByProjectId(id);
-
-    console.log(`Project found:`, project);
-
-    if (!project) {
+    if (!Number.isInteger(projectId)) {
         return res.status(404).render('error', { message: 'Project not found' });
     }
 
-    const title = project.title;
+    try {
+        const project = await getProjectDetails(projectId);
+        const categories = await getCategoriesByProjectId(projectId);
 
-    res.render('project', { title, project, categories });
+        if (!project) {
+            return res.status(404).render('error', { message: 'Project not found' });
+        }
 
+        res.render('project', { title: project.title, project, categories });
+    } catch (error) {
+        console.error('Error loading project details:', error);
+        res.status(500).render('error', { message: 'Unable to load project details.' });
+    }
 };
 
-// showNewProjectForm. This function should do the following:
-// Call the getAllOrganizations model function to get a list of all organizations from the database.
-// Render the new-project view, passing in the page title and the list of organizations to populate the dropdown menu.
-
 const showNewProjectForm = async (req, res) => {
-
-    const organizations = await getAllOrganizations();
-
-    const title = 'Create New Project';
-
-    res.render('new-project', { title, organizations });
-
+    try {
+        const organizations = await getAllOrganizations();
+        res.render('new-project', { title: 'Create New Project', organizations });
+    } catch (error) {
+        console.error('Error loading new project form:', error);
+        res.status(500).render('error', { message: 'Unable to load project creation form.' });
+    }
 };
 
 
@@ -80,28 +120,32 @@ const showNewProjectForm = async (req, res) => {
 // Redirect the user back to the main service project list page.
 
 const processNewProjectForm = async (req, res) => {
+    const { title, description, location, date } = req.body;
+    const organizationId = parseInt(req.body.organizationId, 10);
 
-    const { title, description, location, date, organizationId } = req.body;
-
-    try {
-
-        // Create the new project in the database
-        const newProjectId = await createProject(title, description, location, date, organizationId);
-
-        req.flash('success', 'Project created successfully!');
-
-        res.redirect(`/projects/${newProjectId}`);
-
-    } catch (error) {
-
-        console.error('Error creating project:', error);
-
-        req.flash('error', 'Failed to create project. Please try again.');
-
-        res.redirect('/new-project');
-
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        flashValidationErrors(req, errors);
+        return res.redirect('/new-project');
     }
 
+    if (Number.isNaN(organizationId)) {
+        req.flash('error', 'Please select a valid organization.');
+        return res.redirect('/new-project');
+    }
+
+    try {
+        const newProjectId = await createProject(title, description, location, date, organizationId);
+        req.flash('success', 'Project created successfully!');
+        return res.redirect('/projects');
+    } catch (error) {
+        console.error('Error creating project:', error);
+        req.flash('error', 'Failed to create project. Please try again.');
+        return res.redirect('/new-project');
+    }
 };
 
-export { showProjectsPage, showUpcomingProjectsPage, showProjectDetailsPage, showNewProjectForm, processNewProjectForm };
+export {
+    showProjectsPage, showUpcomingProjectsPage, showProjectDetailsPage,
+    showNewProjectForm, processNewProjectForm, projectValidation
+};

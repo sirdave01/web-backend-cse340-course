@@ -136,7 +136,7 @@ const createProject = async (title, description, location, date, organizationId)
     // record to the projects table in the database using the provided parameters
     
     const query = `
-        INSERT INTO projects (title, description, location, date, organization_id)
+        INSERT INTO projects (title, description, location, project_date, organization_id)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING project_id
     `;
