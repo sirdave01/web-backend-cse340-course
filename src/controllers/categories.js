@@ -80,7 +80,7 @@ const showAssignCategoriesForm = async (req, res) => {
 
   const title = 'Assign Categories to Project';
 
-  res.render('assign-categories', { 
+  res.render('/assign-categories/', { 
     title, 
     project, 
     categories, 
