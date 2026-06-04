@@ -10,11 +10,11 @@
 
         <p> Here are a few of our Partner Organizations: </p>
 
-        <ul>
+        <ul class="list-cards auto">
             
             <% organizations.forEach(organization=> { %>
 
-                <li><img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo"><a href="/organizations/<%= organization.organization_id %>">
+                <li class="card"><img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo"><a href="/organizations/<%= organization.organization_id %>">
                     <%= organization.name %>
                 </a><strong></strong>: <%= organization.contact_email %> 
 

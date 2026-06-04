@@ -10,11 +10,11 @@
 
         <h2>Service Categories</h2>
 
-        <ul>
+        <ul class="list-cards auto">
 
             <% categories.forEach(category => { %>
 
-                <li><a href="/categories/<%= category.category_id %>">
+                <li class="card"><a href="/categories/<%= category.category_id %>">
                     <%= category.category_name %>
                 </a></li>
 

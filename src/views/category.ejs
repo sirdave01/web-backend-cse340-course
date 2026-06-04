@@ -12,11 +12,11 @@
         
         <h3>Service Projects</h3>
         
-        <ul>
+        <ul class="list-cards auto">
         
             <% projects.forEach(project => { %>
         
-                <li>
+                <li class="card">
                     <a href="/project/<%= project.project_id %>">
                         <%= project.title %>
                     </a>
