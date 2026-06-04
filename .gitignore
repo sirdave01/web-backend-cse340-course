@@ -70,6 +70,9 @@ web_modules/
 .env.*
 !.env.example
 
+# Ignore local Python patch file
+patch_list_templates.py
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
