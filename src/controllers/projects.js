@@ -1,6 +1,6 @@
 // importing the db handler for projects page
 
-import { getAllProjects, getUpcomingProjects, getProjectDetails, createProject } from '../models/projects.js';
+import { getAllProjects, getUpcomingProjects, getProjectDetails, createProject, updateProject } from '../models/projects.js';
 
 import { getCategoriesByProjectId } from '../models/categories.js';
 
