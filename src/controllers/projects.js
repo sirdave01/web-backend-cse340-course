@@ -200,7 +200,55 @@ const processNewProjectForm = async (req, res) => {
     
 };
 
+const showEditProjectForm = async (req, res) => {
+
+    const projectId = req.params.id;
+
+    const project = await getProjectDetails(projectId);
+
+    const title = 'Edit Project';
+
+    res.render('edit-project', { title, project });
+};
+
+const processEditProjectForm = async (req, res) => {
+
+    // This function will handle the form submission for editing a project
+    // It will be similar to processNewProjectForm but will update an existing record instead of creating a new one
+
+    const projectId = req.params.id;
+
+    // Check for validation errors
+    const results = validationResult(req);
+
+    if (!results.isEmpty()) {
+
+        // Validation failed - flash error messages
+
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        // Redirect back to the edit form
+        return res.redirect(`/edit-project/${projectId}`);
+    }
+
+    // No errors? Great - proceed with updating the project
+    
+    const { title, description, location, date } = req.body;
+
+    await updateProject(projectId, title, description, location, date);
+
+    // set a flash message to indicate success
+
+    req.flash('success', 'Project updated successfully!');
+
+    res.redirect(`/projects/${projectId}`);
+
+};
+
 export {
     showProjectsPage, showUpcomingProjectsPage, showProjectDetailsPage,
-    showNewProjectForm, processNewProjectForm, projectValidation
+    showNewProjectForm, processNewProjectForm, projectValidation, 
+    showEditProjectForm, processEditProjectForm
 };
