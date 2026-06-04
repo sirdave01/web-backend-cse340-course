@@ -206,9 +206,11 @@ const showEditProjectForm = async (req, res) => {
 
     const project = await getProjectDetails(projectId);
 
+    const organizations = await getAllOrganizations();
+
     const title = 'Edit Project';
 
-    res.render('edit-project', { title, project });
+    res.render('edit-project', { title, project, organizations });
 };
 
 const processEditProjectForm = async (req, res) => {
@@ -243,7 +245,7 @@ const processEditProjectForm = async (req, res) => {
 
     req.flash('success', 'Project updated successfully!');
 
-    res.redirect(`/projects/${projectId}`);
+    res.redirect('/projects');
 
 };
 
