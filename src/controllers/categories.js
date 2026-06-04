@@ -155,19 +155,26 @@ const processAssignCategoriesForm = async (req, res) => {
 };
 
 // create functions that will process the new-category form after insertion had been made
-// and a function to show the edit category form
+// and functions to show the new and edit category forms
+
+const showNewCategoryForm = async (req, res) => {
+  const title = 'Create New Category';
+  res.render('new-category', { title });
+};
 
 const processNewCategoryForm = async (req, res) => {
 
-  const { name } = req.body;
+  const { name } = req.body || {};
 
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
 
-    results.array().forEach((error) => {
+    errors.array().forEach((error) => {
       req.flash('error', error.msg);
     });
+
+    return res.redirect('/new-category');
 
   }
 
@@ -213,7 +220,7 @@ const processEditCategoryForm = async (req, res) => {
 
   if (!errors.isEmpty()) {
 
-    results.array().forEach((error) => {
+    errors.array().forEach((error) => {
 
       req.flash('error', error.msg);
 
@@ -243,6 +250,7 @@ export {
   showCategoryDetailsPage,
   showAssignCategoriesForm,
   processAssignCategoriesForm,
+  showNewCategoryForm,
   processNewCategoryForm,
   showEditCategoryForm,
   processEditCategoryForm,
