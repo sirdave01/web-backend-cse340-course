@@ -32,9 +32,12 @@
                     
                     Organization:
 
-                    <a href="/organization/<%= project.organization_id %>">
+                    <a href="/organizations/<%= project.organization_id %>">
                         <%= project.organization_name %>
                     </a>
+
+                    <br>
+                    <a href="/assign-categories/<%= project.project_id %>">Edit Categories</a>
 
                 </li>
                 
@@ -43,8 +46,6 @@
         </ul>
 
         <p><a href="/new-project">Add a New Service Project</a></p>
-
-        <p><a href="/assign-categories/<%= projects.project_id %>">Edit Categories</a></p>
 
     </main>
 

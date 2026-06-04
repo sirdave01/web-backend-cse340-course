@@ -55,6 +55,7 @@ const showCategoryDetailsPage = async (req, res) => {
     });
 
 };
+
  
 // Create a new function showAssignCategoriesForm.
 // Get the projectId from the request parameters.
@@ -80,7 +81,7 @@ const showAssignCategoriesForm = async (req, res) => {
 
   const title = 'Assign Categories to Project';
 
-  res.render('/assign-categories/', { 
+  res.render('assign-categories', { 
     title, 
     project, 
     categories, 
@@ -146,3 +147,4 @@ export {
   showAssignCategoriesForm,
   processAssignCategoriesForm
 };
+
