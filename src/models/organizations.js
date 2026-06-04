@@ -94,7 +94,7 @@ const updateOrganization = async (organizationId, name, description, contactEmai
     const query = `
       UPDATE organizations
       SET name = $1, description = $2, contact_email = $3, logo_filename = $4
-      WHERE organization_id = $5,
+            WHERE organization_id = $5
       RETURNING organization_id
     `;
 
