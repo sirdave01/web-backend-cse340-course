@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-import { createUser } from '../models/users.js';
+import { createUser, authenticateUser } from '../models/users.js';
 
 import { body, validationResult } from 'express-validator';
 
@@ -96,6 +96,86 @@ const processUserRegistrationForm = async (req, res) => {
         return res.redirect('/register');
     }
 
- };
+};
+ 
+// Create a function called showLoginForm that renders the login view.
 
-export { showUserRegistrationForm, processUserRegistrationForm, userValidation };
+const showLoginForm = (req, res) => {
+
+    const title = 'User Login';
+
+    res.render('login', { title });
+
+};
+
+// Create a function called processLoginForm that does the following:
+// Gets the email and password from the request body.
+// Calls authenticateUser with the email and password.
+// Check to see if a user object is returned. If so:
+// Add the user object to the session object: req.session.user = user;.
+// Add a success flash message that the login was successful.
+// Add a console.log() statement to log the user in the console for debugging purposes.
+// Redirect to the home page.
+// If authentication fails (the function returns null):
+// Add an error flash message that the login failed.
+// Redirect the user back to the login page.
+
+const processLoginForm = async (req, res) => {
+
+    const { email, password } = req.body || {};
+
+    try {
+
+        const user = await authenticateUser(email, password);
+
+        if (user) {
+
+            req.session.user = user;
+
+            req.flash('success', 'Login successful!');
+
+            console.log('Logged in user:', user);
+
+            return res.redirect('/');
+
+        } else {
+
+            req.flash('error', 'Invalid email or password. Please try again.');
+
+            return res.redirect('/login');
+
+        }
+
+    } catch (error) {
+
+        console.error('Error during login:', error);
+
+        req.flash('error', 'An error occurred during login. Please try again.');
+
+        return res.redirect('/login');
+
+    }
+
+};
+
+// Create a function called processLogout that does the following:
+// Destroys the session using req.session.destroy()
+// Adds a success flash message indicating the user has logged out.
+// Redirects the user to the login page
+
+const processLogout = (req, res) => {
+
+    req.session.destroy((err) => {
+
+        if (err) {
+            console.error('Error destroying session:', err);
+        }
+
+        req.flash('success', 'You have been logged out.');
+        return res.redirect('/login');
+
+    });
+
+};
+
+export { showUserRegistrationForm, processUserRegistrationForm, userValidation, processLoginForm, processLogout };
