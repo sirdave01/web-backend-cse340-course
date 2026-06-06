@@ -212,8 +212,39 @@ const showDashboard = (req, res) => {
 
 };
 
+// Create a new function called requireRole. This function should accept a parameter called role 
+// that specifies which role is required.
+// Inside the function, return another function that has the standard middleware parameters: 
+// req, res, and next.
+// In the inner function, check if req.session.user exists and if req.session.user.
+// role_name matches the required role.
+// If the user has the required role, call next() to allow the request to continue.
+// If the user does not have the required role, set an error flash message and 
+// redirect to the root / page.
+
+const requireRole = (role) => {
+
+    return (req, res, next) => {
+
+        if (req.session.user && req.session.user.role_name === role) {
+
+            return next();
+
+        } else {
+
+            req.flash('error', 'You do not have permission to access this page.');
+
+            return res.redirect('/');
+
+        }
+
+    };
+    
+};
+
+
 export {
     showUserRegistrationForm, processUserRegistrationForm, showDashboard,
-    userValidation, processLoginForm, processLogout,
+    userValidation, processLoginForm, processLogout, requireRole,
     showLoginForm, requireLogin
 };
