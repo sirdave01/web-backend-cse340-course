@@ -178,3 +178,18 @@ CREATE TABLE IF NOT EXISTS roles (
 	role_name VARCHAR(50) NOT NULL,
 	role_description TEXT NOT NULL
 );
+
+-- ============================================
+
+-- INSERT SAMPLE DATA INTO THE ROLES TABLE
+
+-- ============================================
+
+INSERT INTO roles (role_name, role_description)
+VALUES 
+
+('user', 'Standard User with basic access'),
+('admin', 'Administrator with full system access');
+
+
+SELECT * FROM roles;
