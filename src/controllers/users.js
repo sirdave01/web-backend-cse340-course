@@ -139,7 +139,7 @@ const processLoginForm = async (req, res) => {
                 console.log('User logged in:', user);
             }
 
-            return res.redirect('/');
+            return res.redirect('/dashboard');
 
         } else {
 
@@ -198,8 +198,22 @@ const requireLogin = (req, res, next) => {
 
 };
 
+// Create a new function called showDashboard that does the following:
+// Gets the user's name and email from req.session.user.
+// Renders the dashboard.ejs view and passes the name and email address to it.
+
+const showDashboard = (req, res) => {
+
+    const { name, email } = req.session.user || {};
+
+    const title = 'User Dashboard';
+
+    res.render('dashboard', { title, name, email });
+
+};
+
 export {
-    showUserRegistrationForm, processUserRegistrationForm,
+    showUserRegistrationForm, processUserRegistrationForm, showDashboard,
     userValidation, processLoginForm, processLogout,
     showLoginForm, requireLogin
 };
