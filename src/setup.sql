@@ -156,3 +156,25 @@ ON CONFLICT (project_id, category_id) DO NOTHING;
 SELECT * FROM categories;
 
 SELECT * FROM project_categories;
+
+
+-- ======================
+
+-- creating a roles table that'll have: 
+-- role_id - a serial (auto-incrementing integer) that serves as the primary key
+-- role_name - a variable character field (VARCHAR) with a maximum length of 50 characters that must be unique and cannot be null
+-- role_description - a text field that can store a longer description of the role
+
+-- ==================================
+
+-- ==================================
+
+-- ROLES TABLE
+
+-- ===================================
+
+CREATE TABLE IF NOT EXISTS roles (
+	role_id SERIAL PRIMARY KEY,
+	role_name VARCHAR(50) NOT NULL,
+	role_description TEXT NOT NULL
+);
