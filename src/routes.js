@@ -27,6 +27,8 @@ import {
 
 import { testErrorPage } from './controllers/errors.js';
 
+import { showUserRegistrationForm, processUserRegistrationForm, userValidation } from './controllers/users.js';
+
 // create the router function to get the pages
 
 const router = express.Router();
@@ -81,6 +83,10 @@ router.post('/new-category', categoryValidation, processNewCategoryForm);
 // Routes to handle the edit category form
 router.get('/edit-category/:id', showEditCategoryForm);
 router.post('/edit-category/:id', categoryValidation, processEditCategoryForm);
+
+// user registration routes
+router.get('/register', showUserRegistrationForm);
+router.post('/register', userValidation, processUserRegistrationForm);
 
 router.get('/test-error', testErrorPage);
 
