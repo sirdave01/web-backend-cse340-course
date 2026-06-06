@@ -33,10 +33,37 @@
 
             </div>
 
+            <div class="form-group">
+            
+                <label for="confirm_password">Confirm Password:</label>
+            
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            
+            </div>
+
+            <div class="form-group show-password">
+                <input type="checkbox" id="show-password">
+                <label for="show-password">Show password while typing</label>
+            </div>
+
             <button type="submit">Register</button>
 
         </form>
 
-    </main>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const password = document.getElementById('password');
+                const confirmPassword = document.getElementById('confirm_password');
+                const toggle = document.getElementById('show-password');
+
+                if (toggle) {
+                    toggle.addEventListener('change', () => {
+                        const type = toggle.checked ? 'text' : 'password';
+                        password.type = type;
+                        confirmPassword.type = type;
+                    });
+                }
+            });
+        </script>
 
     <%- include('partials/footer') %>

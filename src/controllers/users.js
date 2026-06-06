@@ -1,4 +1,4 @@
-import { bcrypt } from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 import { createUser } from '../models/users.js';
 
@@ -26,8 +26,18 @@ const userValidation = [
         .notEmpty()
         .withMessage('Password is required')
         .isLength({ min: 6, max: 100 })
-        .withMessage('Password must be between 6 and 100 characters')
-
+        .withMessage('Password must be between 6 and 100 characters'),
+    
+    body('confirm_password')
+        .trim()
+        .notEmpty()
+        .withMessage('Please confirm your password')
+        .custom((value, { req }) => {
+            if (value !== req.body.password) {
+                throw new Error('Passwords do not match');
+            }
+            return true;
+        })
 ];
 
 // Create a showUserRegistrationForm controller function
@@ -63,19 +73,25 @@ const processUserRegistrationForm = async (req, res) => {
     try {
 
          // Hash the password before storing it
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(14);
         const password_hash = await bcrypt.hash(password, salt);
 
         // Create the user in the database
         const userId = await createUser(name, email, password_hash);
 
         // Redirect to the home page after successful registration
-        req.flash('Success', 'Registration successful! Please log in.');
+        req.flash('success', 'Registration successful! Please log in.');
         return res.redirect('/');
 
     } catch (error) {
 
         console.error('Error registering user:', error);
+
+        if (error.message === 'Email already in use') {
+            req.flash('error', 'This email address is already registered. Please use another email or log in.');
+            return res.redirect('/register');
+        }
+
         req.flash('error', 'An error occurred during registration. Please try again.');
         return res.redirect('/register');
     }
