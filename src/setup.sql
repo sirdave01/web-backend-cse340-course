@@ -193,3 +193,31 @@ VALUES
 
 
 SELECT * FROM roles;
+
+
+-- ======================
+
+-- create a table named users with the following columns:
+-- user_id - a serial (auto-incrementing integer) that serves as the primary key
+-- name - a VARCHAR(100) field that cannot be null (this will store the user's display name)
+-- email - a VARCHAR(100) field that must be unique and cannot be null (this will serve as the username)
+-- password_hash - a VARCHAR(255) field that cannot be null (this will store the hashed password)
+-- role_id - an integer field that references the role_id column in the roles table
+-- created_at - a timestamp field that defaults to the current timestamp
+
+-- ==================================
+
+-- ==================================
+
+-- USERS TABLE
+
+-- ===================================
+
+CREATE TABLE IF NOT EXISTS users (
+	user_id SERIAL PRIMARY KEY,
+	name VARCHAR(100) NOT NULL,
+	email VARCHAR(100) NOT NULL,
+	password_hash VARCHAR(255) NOT NULL,
+	role_id INTEGER REFERENCES roles(role_id),
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP	
+);
