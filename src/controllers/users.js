@@ -134,7 +134,10 @@ const processLoginForm = async (req, res) => {
 
             req.flash('success', 'Login successful!');
 
-            console.log('Logged in user:', user);
+            if (res.locals.NODE_ENV === 'development') {
+                 
+                console.log('User logged in:', user);
+            }
 
             return res.redirect('/');
 
@@ -165,17 +168,19 @@ const processLoginForm = async (req, res) => {
 
 const processLogout = (req, res) => {
 
-    req.session.destroy((err) => {
+    if (req.session.user) {
+       
+        delete req.session.user;
+    }
 
-        if (err) {
-            console.error('Error destroying session:', err);
-        }
+    req.flash('success', 'Logout successful!');
 
-        req.flash('success', 'You have been logged out.');
-        return res.redirect('/login');
-
-    });
+    res.redirect('/login');
 
 };
 
-export { showUserRegistrationForm, processUserRegistrationForm, userValidation, processLoginForm, processLogout };
+export {
+    showUserRegistrationForm, processUserRegistrationForm,
+    userValidation, processLoginForm, processLogout,
+    showLoginForm
+};

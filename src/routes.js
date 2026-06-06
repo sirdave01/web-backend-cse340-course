@@ -27,7 +27,11 @@ import {
 
 import { testErrorPage } from './controllers/errors.js';
 
-import { showUserRegistrationForm, processUserRegistrationForm, userValidation } from './controllers/users.js';
+import {
+    showUserRegistrationForm, processUserRegistrationForm,
+    userValidation, processLoginForm, processLogout,
+    showLoginForm
+} from './controllers/users.js';
 
 // create the router function to get the pages
 
@@ -87,6 +91,13 @@ router.post('/edit-category/:id', categoryValidation, processEditCategoryForm);
 // user registration routes
 router.get('/register', showUserRegistrationForm);
 router.post('/register', userValidation, processUserRegistrationForm);
+
+// user login routes
+router.get('/login', showLoginForm);
+router.post('/login', processLoginForm);
+
+// user logout route
+router.get('/logout', processLogout);
 
 router.get('/test-error', testErrorPage);
 
