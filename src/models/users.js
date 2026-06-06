@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import db from './db.js';
 
 // checking if the email is registered already in the database before creating a new user

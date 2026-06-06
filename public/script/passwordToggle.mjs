@@ -12,17 +12,16 @@ export const initPasswordToggle = () => {
     const toggle = document.getElementById('show-password');
 
     // Only initialize if the toggle checkbox exists on the page
-    
-    if (toggle && password && confirmPassword) {
-        
-        toggle.addEventListener('change', () => {
-            
-            const type = toggle.checked ? 'text' : 'password';
-            
-            password.type = type;
-            
-            confirmPassword.type = type;
-            
-        });
+    if (!toggle || !password) {
+        return;
     }
+
+    toggle.addEventListener('change', () => {
+        const type = toggle.checked ? 'text' : 'password';
+        password.type = type;
+
+        if (confirmPassword) {
+            confirmPassword.type = type;
+        }
+    });
 };

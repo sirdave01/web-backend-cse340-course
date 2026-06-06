@@ -78,15 +78,6 @@ app.set('views', path.join(__dirname, 'src/views'));
 // templates for the routes. If the middleware is defined before the view engine and views
 // configuration, it may not work properly because it may not have access to the necessary resources.
 
-// Set up session management
-app.use(session({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 60 * 60 * 1000 } // Session expires after 1 hour of inactivity
-}));
-
-
 app.use((req, res, next) => {
   
   if (NODE_ENV === 'development') {
