@@ -179,8 +179,27 @@ const processLogout = (req, res) => {
 
 };
 
+// Create a function called requireLogin that does the following:
+// Checks if req.session.user exists.
+// If it does not exist, the function should set an error flash message and redirect the user to the login page.
+// If the user exists on the session, the function should call next() to allow the request to continue.
+
+const requireLogin = (req, res, next) => {
+
+    if (!req.session.user) {
+
+        req.flash('error', 'You must be logged in to access this page.');
+
+        return res.redirect('/login');
+
+    }
+
+    next();
+
+};
+
 export {
     showUserRegistrationForm, processUserRegistrationForm,
     userValidation, processLoginForm, processLogout,
-    showLoginForm
+    showLoginForm, requireLogin
 };
