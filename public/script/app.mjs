@@ -5,10 +5,14 @@ import { initHamburger } from './hambutton.mjs';
 
 import { initDarkMode } from './modetoggle.mjs';
 
+import { initPasswordToggle } from './passwordToggle.mjs';
+
 document.addEventListener('DOMContentLoaded', () => {
 
     initHamburger();
 
     initDarkMode();
+
+    initPasswordToggle();
 
 });
