@@ -247,3 +247,17 @@ SELECT * FROM users;
 SELECT * FROM roles;
 
 UPDATE users SET role_id = (SELECT role_id FROM roles WHERE role_name = 'admin') WHERE email = 'admin@example.com';
+
+=========
+-- creating a volunteers table that'll have: Unique identifier (volunteer_id), foreign keys of: 
+-- user table and project table ids in a many-to-many relationship database
+
+-- ==================================
+
+CREATE TABLE IF NOT EXISTS volunteers (
+	volunteer_id SERIAL PRIMARY KEY,
+	user_id INTEGER REFERENCES users(user_id),
+	project_id INTEGER REFERENCES projects(project_id),
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	UNIQUE(user_id, project_id) -- prevents duplicate signups
+);
