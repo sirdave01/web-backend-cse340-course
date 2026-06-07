@@ -30,7 +30,7 @@ import { testErrorPage } from './controllers/errors.js';
 import {
     showUserRegistrationForm, processUserRegistrationForm,
     userValidation, processLoginForm, processLogout,
-    showLoginForm, requireLogin, showDashboard, requireRole
+    showLoginForm, requireLogin, showDashboard, requireRole, showUsers
 } from './controllers/users.js';
 
 // create the router function to get the pages
@@ -102,6 +102,9 @@ router.get('/logout', processLogout);
 
 // router for the user dashboard page, which requires the user to be logged in to access it
 router.get('/dashboard', requireLogin, showDashboard);
+
+// router for the users page, which requires the user to be logged in and have the admin role to access it
+router.get('/users', requireLogin, requireRole('admin'), showUsers);
 
 router.get('/test-error', testErrorPage);
 

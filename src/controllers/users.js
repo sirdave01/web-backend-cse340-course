@@ -242,9 +242,44 @@ const requireRole = (role) => {
     
 };
 
+// create a new function that display all registered users in the system. This function should be called showUsers and should do the following:
+// Check if the user is logged in and has the admin role. If not, redirect to the dashboard page with an error message.
+// If the user is an admin, retrieve all users from the database and render a view called users.ejs, passing the list of users with their names, email(username) and role to the view.
+
+const showUsers = async (req, res) => {
+
+    if (!req.session.user || req.session.user.role_name !== 'admin') {
+
+        req.flash('error', 'You do not have permission to access this page.');
+
+        return res.redirect('/dashboard');
+
+    }
+
+    try {
+
+        const users = await getAllUsers();
+
+        const title = 'Registered Users';
+
+        res.render('users', { title, users });
+
+    }
+
+    catch (error) {
+
+        console.error('Error fetching users:', error);
+
+        req.flash('error', 'An error occurred while fetching users. Please try again.');
+        
+        return res.redirect('/');
+
+    }
+
+};
 
 export {
-    showUserRegistrationForm, processUserRegistrationForm, showDashboard,
+    showUserRegistrationForm, processUserRegistrationForm, showDashboard, showUsers,
     userValidation, processLoginForm, processLogout, requireRole,
-    showLoginForm, requireLogin
+    showLoginForm, requireLogin, showUsers
 };
