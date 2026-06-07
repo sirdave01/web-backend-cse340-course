@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-import { createUser, authenticateUser } from '../models/users.js';
+import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
 
 import { body, validationResult } from 'express-validator';
 
@@ -260,9 +260,11 @@ const showUsers = async (req, res) => {
 
         const users = await getAllUsers();
 
+        const { name, email } = req.session.user;
+
         const title = 'Registered Users';
 
-        res.render('users', { title, users });
+        res.render('users', { title, users, name, email });
 
     }
 
@@ -281,5 +283,5 @@ const showUsers = async (req, res) => {
 export {
     showUserRegistrationForm, processUserRegistrationForm, showDashboard, showUsers,
     userValidation, processLoginForm, processLogout, requireRole,
-    showLoginForm, requireLogin, showUsers
+    showLoginForm, requireLogin
 };

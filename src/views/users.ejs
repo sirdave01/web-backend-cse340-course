@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+
+    <main>
+
+        <h1>
+            <%= title %>
+        </h1>
+
+        <!-- displays the user's name and email address. You can assume the name and email address are stored in name and email
+        variables that you will set in your controller -->
+
+        <h2> Users Dashboard </h2>
+
+        <p>Name: <%= name %>
+        </p>
+
+        <p>Email: <%= email %>
+        </p>
+
+        <h2>Registered Users</h2>
+
+        <% if (users && users.length > 0) { %>
+            <table border="1" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(user => { %>
+                        <tr>
+                            <td><%= user.user_id %></td>
+                            <td><%= user.name %></td>
+                            <td><%= user.email %></td>
+                            <td><%= user.role_name %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No registered users found.</p>
+        <% } %>
+
+    </main>
+
+    <%- include('partials/footer') %>

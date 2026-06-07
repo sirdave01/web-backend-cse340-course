@@ -90,15 +90,21 @@ app.use((req, res, next) => {
 
 });
 
-// middleware function to make NODE_ENV available in all EJS templates
+// middleware function to make NODE_ENV and user role available in all EJS templates
 
 app.use((req, res, next) => {
 
    res.locals.isLoggedIn = false;
+   res.locals.isAdmin = false;
    
     if (req.session && req.session.user) {
       
         res.locals.isLoggedIn = true;
+        
+        // Check if user has admin role
+        if (req.session.user.role_name === 'admin') {
+            res.locals.isAdmin = true;
+        }
         
     }
 
