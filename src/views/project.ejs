@@ -20,13 +20,15 @@
         </p>
 
         <p><strong>Partner Organization:</strong>
+
             <a href="/organizations/<%= project.organization_id %>">
+
                 <%= project.organization_name %>
+
             </a>
         </p>
 
         <h3>Description</h3>
-
         <p>
             <%= project.description %>
         </p>
@@ -54,61 +56,66 @@
             </ul>
             <% } %>
 
-        <!-- Volunteer Section -->
-        <div class="volunteer-section">
+                <!-- Volunteer Section -->
+                <div class="volunteer-section">
 
-            <% if (user) { %>
+                    <% if (user) { %>
 
-                <!-- User is logged in -->
-                <% if (isVolunteering) { %>
+                        <% if (isVolunteering) { %>
 
-                    <!-- User is already volunteering -->
-                    <div class="volunteer-status success">
+                            <div class="volunteer-status success">
 
-                        <p><strong>✓ You are volunteering for this project!</strong></p>
+                                <p><strong>✓ You are volunteering for this project!</strong></p>
 
-                        <p>Thank you for your commitment to this service project.</p>
+                                <p>Thank you for your commitment to this service project.</p>
 
-                    </div>
+                            </div>
 
-                    <form action="/projects/<%= project.project_id %>/volunteer/remove" method="POST" style="display: inline;">
+                            <form action="/projects/<%= project.project_id %>/volunteer/remove" method="POST"
+                                class="inline-form">
 
-                        <button type="submit" class="btn btn-danger">
+                                <button type="submit" class="btn btn-danger">
 
-                            Remove Yourself as Volunteer
+                                    Remove Yourself as Volunteer
 
-                        </button>
+                                </button>
 
-                    </form>
+                            </form>
 
-                <% } else { %>
+                            <% } else { %>
 
-                    <!-- User is not volunteering yet -->
-                    <p><strong>Interested in volunteering?</strong></p>
+                                <p><strong>Interested in volunteering?</strong></p>
 
-                    <form action="/projects/<%= project.project_id %>/volunteer" method="POST" style="display: inline;">
+                                <form action="/projects/<%= project.project_id %>/volunteer" method="POST"
+                                    class="inline-form">
 
-                        <button type="submit" class="btn btn-primary" style="padding: 10px 15px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    <button type="submit" class="btn btn-primary">
 
-                            Sign Up to Volunteer
+                                        Sign Up to Volunteer
 
-                        </button>
+                                    </button>
 
-                    </form>
+                                </form>
 
-                <% } %>
+                                <% } %>
 
-            <% } else { %>
+                                    <% } else { %>
 
-                <!-- User is NOT logged in -->
+                                        <p><strong>Want to volunteer?</strong>
+                                            
+                                            <a href="/login">Log in</a> or
+                                            
+                                            <a href="/register">register</a>
+                                            
+                                            to sign up for this project.
+                                            
+                                        </p>
 
-                <p><strong>Want to volunteer?</strong> <a href="/login">Log in</a> or <a href="/register">register</a> to sign up for this project.</p>
+                                        <% } %>
 
-            <% } %>
+                </div>
 
-        </div>
-
-            <p><a href="/edit-project/<%= project.project_id %>">Edit Project</a></p>
+                <p><a href="/edit-project/<%= project.project_id %>">Edit Project</a></p>
 
     </main>
 

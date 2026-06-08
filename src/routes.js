@@ -110,12 +110,12 @@ router.get('/users', requireLogin, requireRole('admin'), showUsers);
 // ====================== VOLUNTEER ROUTES ======================
 
 // Volunteer for a project (must be logged in)
-router.post('/projects/:id/volunteer', requireLogin, addVolunteer);
+router.post('/project/:id/volunteer', requireLogin, addVolunteer);
 
 // Remove yourself as a volunteer (must be logged in)
-router.post('/projects/:id/volunteer/remove', requireLogin, removeVolunteer);
+router.post('/project/:id/volunteer/remove', requireLogin, removeVolunteer);
 
-router.get('/projects/:id/volunteer', requireLogin, showVolunteerPage);
+router.get('/project/:id/volunteer', requireLogin, showVolunteerPage);
 
 router.get('/test-error', testErrorPage);
 

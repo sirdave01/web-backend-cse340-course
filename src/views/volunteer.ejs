@@ -1,44 +1,52 @@
 <%- include('partials/header') %>
 
-<main>
-    <h1><%= title %></h1>
+    <main>
 
-    <div class="volunteer-section">
-        
-        <h2><%= project.title %></h2>
+        <h1>
+            <%= title %>
+        </h1>
 
-        <div class="project-details">
+        <div class="volunteer-section">
 
-            <p><strong>Date:</strong> 
+            <h2>
+                <%= project.title %>
+            </h2>
 
-                <%= new Date(project.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
-            
-            </p>
+            <div class="project-details">
 
-            <p><strong>Location:</strong> 
+                <p><strong>Date:</strong>
 
-                <%= project.location %>
-            </p>
+                    <%= new Date(project.date).toLocaleDateString('en-US', { year: 'numeric' , month: 'long' ,
+                        day: 'numeric' }) %>
 
-            <p><strong>Partner Organization:</strong> 
+                </p>
 
-                <a href="/organizations/<%= project.organization_id %>">
+                <p><strong>Location:</strong>
 
-                    <%= project.organization_name %>
+                    <%= project.location %>
 
-                </a>
-            </p>
+                </p>
 
-            <h3>Description</h3>
+                <p><strong>Partner Organization:</strong>
 
-            <p><%= project.description %></p>
+                    <a href="/organizations/<%= project.organization_id %>">
 
-        </div>
+                        <%= project.organization_name %>
 
-        <!-- Volunteer Status and Actions -->
-        <% if (user) { %>
+                    </a>
+                </p>
 
-            <div class="volunteer-actions">
+                <h3>Description</h3>
+
+                <p>
+                    <%= project.description %>
+
+                </p>
+
+            </div>
+
+            <!-- Volunteer Actions -->
+            <% if (user) { %>
 
                 <% if (isVolunteering) { %>
 
@@ -50,49 +58,49 @@
 
                     </div>
 
-                    <form action="/projects/<%= project.project_id %>/volunteer/remove" method="POST" style="display: inline;">
+                    <form action="/projects/<%= project.project_id %>/volunteer/remove" method="POST"
+                        class="inline-form">
 
                         <button type="submit" class="btn btn-danger">Remove Yourself as Volunteer</button>
 
                     </form>
 
-                <% } else { %>
+                    <% } else { %>
 
-                    <p>Would you like to volunteer for this project?</p>
+                        <p>Would you like to volunteer for this project?</p>
 
-                    <form action="/projects/<%= project.project_id %>/volunteer" method="POST" style="display: inline;">
+                        <form action="/projects/<%= project.project_id %>/volunteer" method="POST" class="inline-form">
+                            
+                            <button type="submit" class="btn btn-primary">Sign Up to Volunteer</button>
 
-                        <button type="submit" class="btn btn-primary">Sign Up to Volunteer</button>
+                        </form>
 
-                    </form>
 
-                <% } %>
+                        <% } %>
 
-            </div>
+                            <% } else { %>
 
-        <% } else { %>
+                                <div class="volunteer-login-prompt">
 
-            <div class="volunteer-login-prompt">
+                                    <p><strong>Want to volunteer?</strong> You must be logged in to sign up for this
+                                        project.</p>
 
-                <p><strong>Want to volunteer?</strong> You must be logged in to sign up for this project.</p>
+                                    <a href="/login" class="btn btn-primary">Log In</a>
 
-                <a href="/login" class="btn btn-primary">Log In</a>
+                                    <p>Don't have an account? <a href="/register">Register here</a></p>
 
-                <p>Don't have an account? <a href="/register">Register here</a></p>
+                                </div>
 
-            </div>
+                                <% } %>
 
-        <% } %>
+                                    <!-- Back Link -->
+                                    <p class="back-link">
+                                        
+                                        <a href="/project/<%= project.project_id %>">← Back to Project Details</a>
+                                    </p>
 
-        <!-- Back Link -->
-        <p style="margin-top: 20px;">
+        </div>
 
-            <a href="/project/<%= project.project_id %>">← Back to Project Details</a>
+    </main>
 
-        </p>
-
-    </div>
-
-</main>
-
-<%- include('partials/footer') %>
+    <%- include('partials/footer') %>

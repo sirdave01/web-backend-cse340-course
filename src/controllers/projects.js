@@ -307,7 +307,7 @@ const addVolunteer = async (req, res) => {
 
         req.flash('success', 'You have successfully volunteered for this project!');
 
-        res.redirect(`/projects/${project_id}`);
+        res.redirect(`/project/${project_id}`);
 
     } catch (error) {
 
@@ -315,7 +315,7 @@ const addVolunteer = async (req, res) => {
 
         req.flash('error', 'Failed to volunteer. Please try again.');
 
-        res.redirect(`/projects/${req.params.id}`);
+        res.redirect(`/project/${req.params.id}`);
 
     }
 
@@ -342,7 +342,7 @@ const removeVolunteer = async (req, res) => {
 
         req.flash('success', 'You have successfully removed yourself as a volunteer for this project.');
 
-        res.redirect(`/projects/${project_id}`);
+        res.redirect(`/project/${project_id}`);
 
     } catch (error) {
 
@@ -350,7 +350,7 @@ const removeVolunteer = async (req, res) => {
 
         req.flash('error', 'Failed to remove volunteer. Please try again.');
 
-        res.redirect(`/projects/${req.params.id}`);
+        res.redirect(`/project/${req.params.id}`);
 
     }
 

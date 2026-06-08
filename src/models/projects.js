@@ -189,55 +189,41 @@ const updateProject = async (projectId, title, description, location, date) => {
 // adding the volunteer function that uses two parameters
 
 const volunteerForProject = async (user_id, project_id) => { 
-
     const query = `
         INSERT INTO volunteers (user_id, project_id)
         VALUES ($1, $2)
         ON CONFLICT (user_id, project_id) DO NOTHING
-        RETURNING volunteer_id
+        RETURNING volunteer_id;
     `;
 
-    const queryParams = [user_id, project_id];
-
-    const result = await db.query(query, queryParams);
-
-    if (result.rows.length === 0) {
-        throw new Error('Failed to volunteer for project');
-    }
+    const result = await db.query(query, [user_id, project_id]);
 
     if (process.env.ENABLE_SQL_LOGGING === 'true') {
-        console.log('User volunteered for project with ID:', result.rows[0].volunteer_id);
+        console.log(`User ${user_id} volunteered for project ${project_id}`);
     }
 
-    return result.rows[0].volunteer_id;
+    // Return true if inserted, false if already existed
+    return result.rows.length > 0;
 };
 
 
 //adding a function that lets volunteers remove thenselves from a project
 
 const removeVolunteerFromProject = async (user_id, project_id) => {
-
     const query = `
         DELETE FROM volunteers
         WHERE user_id = $1 AND project_id = $2
-        RETURNING volunteer_id
+        RETURNING volunteer_id;
     `;
 
-    const queryParams = [user_id, project_id];
-
-    const result = await db.query(query, queryParams);
-
-    if (result.rows.length === 0) {
-        throw new Error('Failed to remove volunteer from project');
-    }
+    const result = await db.query(query, [user_id, project_id]);
 
     if (process.env.ENABLE_SQL_LOGGING === 'true') {
-        console.log('User removed from project with ID:', result.rows[0].volunteer_id);
+        console.log(`User ${user_id} removed from project ${project_id}`);
     }
 
-    return result.rows[0].volunteer_id;
-
- };
+    return result.rows.length > 0;   // return whether anything was deleted
+};
 
 
 //check if user has already volunteered for a project
