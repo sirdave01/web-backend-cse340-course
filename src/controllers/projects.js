@@ -107,56 +107,39 @@ const showProjectDetailsPage = async (req, res) => {
     const projectId = Number(req.params.id);
 
     if (!Number.isInteger(projectId)) {
-
         return res.status(404).render('error', { message: 'Project not found' });
-
     }
 
     try {
-
         const project = await getProjectDetails(projectId);
-
         const categories = await getCategoriesByProjectId(projectId);
 
         if (!project) {
-
             return res.status(404).render('error', { message: 'Project not found' });
-
         }
 
         // Check if logged-in user is already volunteering
         let isVolunteering = false;
 
-        if (req.session?.user?.id) {
+        const userId = req.session?.user?.user_id || req.session?.user?.id;
 
-            isVolunteering = await hasUserVolunteeredForProject(
+        if (userId) {
 
-                req.session.user.id, 
-
-                projectId
-
-            );
-
+            isVolunteering = await hasUserVolunteeredForProject(userId, projectId);
         }
 
         res.render('project', { 
-
             title: project.title, 
             project, 
             categories,
-            isVolunteering,           // ← Important for the view
-            user: req.session.user    // ← useful for checking login status
-
+            isVolunteering,
+            user: req.session.user
         });
 
     } catch (error) {
-
         console.error('Error loading project details:', error);
-
         res.status(500).render('error', { message: 'Unable to load project details.' });
-
     }
-
 };
 
 const showNewProjectForm = async (req, res) => {
@@ -279,21 +262,26 @@ const processEditProjectForm = async (req, res) => {
 
 // user must be logged in to volunteer for a project
 
+// user must be logged in to volunteer for a project
+// ==================== VOLUNTEER CONTROLLERS ====================
+
 const addVolunteer = async (req, res) => {
 
     try {
 
-        const user_id = req.session.user?.id;
-
-        const project_id = parseInt(req.params.id);
+        const user_id = req.session.user?.user_id || req.session.user?.id;
 
         if (!user_id) {
+
+            console.log("❌ No user_id found in session!");
 
             req.flash('error', 'You must be logged in to volunteer.');
 
             return res.redirect('/login');
 
         }
+
+        const project_id = parseInt(req.params.id);
 
         const project = await getProjectDetails(project_id);
 
@@ -310,127 +298,132 @@ const addVolunteer = async (req, res) => {
         res.redirect(`/project/${project_id}`);
 
     } catch (error) {
-
+        
         console.error('Error volunteering for project:', error);
-
+        
         req.flash('error', 'Failed to volunteer. Please try again.');
-
+        
         res.redirect(`/project/${req.params.id}`);
-
+        
     }
-
+    
 };
 
-// Remove yourself as a volunteer
-
 const removeVolunteer = async (req, res) => {
-
+    
     try {
-
-        const user_id = req.session.user?.id;
-
-        const project_id = parseInt(req.params.id);
+        
+        const user_id = req.session.user?.user_id || req.session.user?.id;
 
         if (!user_id) {
-
+            
+            console.log("❌ No user_id found in session!");
+            
             req.flash('error', 'You must be logged in to remove yourself as a volunteer.');
-
+            
             return res.redirect('/login');
+            
         }
+
+        const project_id = parseInt(req.params.id);
 
         await removeVolunteerFromProject(user_id, project_id);
 
         req.flash('success', 'You have successfully removed yourself as a volunteer for this project.');
-
+        
         res.redirect(`/project/${project_id}`);
 
     } catch (error) {
-
+        
         console.error('Error removing volunteer from project:', error);
-
+        
         req.flash('error', 'Failed to remove volunteer. Please try again.');
-
+        
         res.redirect(`/project/${req.params.id}`);
-
+        
     }
-
+    
 };
-
-// Get user's volunteered projects
 
 const getUserVolunteeredProjectsController = async (req, res, next) => {
-
+    
     try {
+        
+        const userId = req.session?.user?.user_id || req.session?.user?.id;
 
-        if (!req.session.user) {
-
+        if (!userId) {
+            
             res.locals.volunteeredProjects = [];
-
+            
             return next();
-
+            
         }
 
-        const volunteeredProjects = await getUserVolunteeredProjects(req.session.user.id);
-
+        const volunteeredProjects = await getUserVolunteeredProjects(userId);
+        
         res.locals.volunteeredProjects = volunteeredProjects || [];
-
+        
         next();
-
+        
     } catch (error) {
-
+        
         console.error('Error fetching volunteered projects:', error);
-
+        
         res.locals.volunteeredProjects = [];
-
+        
         next();
-
+        
     }
-
+    
 };
 
-// display the volunteer confirmation page after a user volunteers for a project
 const showVolunteerPage = async (req, res) => {
-
+    
     const projectId = Number(req.params.id);
 
     if (!Number.isInteger(projectId)) {
         
         return res.status(404).render('error', { message: 'Project not found' });
+        
     }
 
     try {
+        
         const project = await getProjectDetails(projectId);
-
+        
         if (!project) {
-
+            
             return res.status(404).render('error', { message: 'Project not found' });
-
+            
         }
 
         let isVolunteering = false;
+        
+        const userId = req.session?.user?.user_id || req.session?.user?.id;
 
-        if (req.session?.user?.id) {
-
-            isVolunteering = await hasUserVolunteeredForProject(req.session.user.id, projectId);
-
+        if (userId) {
+            
+            isVolunteering = await hasUserVolunteeredForProject(userId, projectId);
+            
         }
 
         res.render('volunteer', {
-
+            
             title: 'Volunteer Confirmation',
             project,
             isVolunteering,
             user: req.session.user
+            
         });
 
     } catch (error) {
-
+        
         console.error('Error loading volunteer page:', error);
-
+        
         res.status(500).render('error', { message: 'Unable to load volunteer page.' });
-
+        
     }
-
+    
 };
 
 

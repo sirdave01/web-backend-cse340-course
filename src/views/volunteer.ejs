@@ -69,7 +69,7 @@
 
                         <p>Would you like to volunteer for this project?</p>
 
-                        <form action="/projects/<%= project.project_id %>/volunteer" method="POST" class="inline-form">
+                        <form action="/project/<%= project.project_id %>/volunteer" method="POST" class="inline-form">
                             
                             <button type="submit" class="btn btn-primary">Sign Up to Volunteer</button>
 
@@ -95,7 +95,7 @@
 
                                     <!-- Back Link -->
                                     <p class="back-link">
-                                        
+
                                         <a href="/project/<%= project.project_id %>">← Back to Project Details</a>
                                     </p>
 

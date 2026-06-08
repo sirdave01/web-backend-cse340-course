@@ -86,7 +86,7 @@
 
                                 <p><strong>Interested in volunteering?</strong></p>
 
-                                <form action="/projects/<%= project.project_id %>/volunteer" method="POST"
+                                <form action="/project/<%= project.project_id %>/volunteer" method="POST"
                                     class="inline-form">
 
                                     <button type="submit" class="btn btn-primary">
@@ -102,13 +102,13 @@
                                     <% } else { %>
 
                                         <p><strong>Want to volunteer?</strong>
-                                            
+
                                             <a href="/login">Log in</a> or
-                                            
+
                                             <a href="/register">register</a>
-                                            
+
                                             to sign up for this project.
-                                            
+
                                         </p>
 
                                         <% } %>
