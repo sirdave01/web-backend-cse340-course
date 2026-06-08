@@ -208,7 +208,9 @@ const showDashboard = (req, res) => {
 
     const title = 'User Dashboard';
 
-    res.render('dashboard', { title, name, email });
+    const volunteeredProjects = res.locals.volunteeredProjects || [];
+
+    res.render('dashboard', { title, name, email, volunteeredProjects });
 
 };
 

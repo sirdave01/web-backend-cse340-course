@@ -1,0 +1,98 @@
+<%- include('partials/header') %>
+
+<main>
+    <h1><%= title %></h1>
+
+    <div class="volunteer-section">
+        
+        <h2><%= project.title %></h2>
+
+        <div class="project-details">
+
+            <p><strong>Date:</strong> 
+
+                <%= new Date(project.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+            
+            </p>
+
+            <p><strong>Location:</strong> 
+
+                <%= project.location %>
+            </p>
+
+            <p><strong>Partner Organization:</strong> 
+
+                <a href="/organizations/<%= project.organization_id %>">
+
+                    <%= project.organization_name %>
+
+                </a>
+            </p>
+
+            <h3>Description</h3>
+
+            <p><%= project.description %></p>
+
+        </div>
+
+        <!-- Volunteer Status and Actions -->
+        <% if (user) { %>
+
+            <div class="volunteer-actions">
+
+                <% if (isVolunteering) { %>
+
+                    <div class="volunteer-status success">
+
+                        <p><strong>✓ You are volunteering for this project!</strong></p>
+
+                        <p>Thank you for your commitment to this service project.</p>
+
+                    </div>
+
+                    <form action="/projects/<%= project.project_id %>/volunteer/remove" method="POST" style="display: inline;">
+
+                        <button type="submit" class="btn btn-danger">Remove Yourself as Volunteer</button>
+
+                    </form>
+
+                <% } else { %>
+
+                    <p>Would you like to volunteer for this project?</p>
+
+                    <form action="/projects/<%= project.project_id %>/volunteer" method="POST" style="display: inline;">
+
+                        <button type="submit" class="btn btn-primary">Sign Up to Volunteer</button>
+
+                    </form>
+
+                <% } %>
+
+            </div>
+
+        <% } else { %>
+
+            <div class="volunteer-login-prompt">
+
+                <p><strong>Want to volunteer?</strong> You must be logged in to sign up for this project.</p>
+
+                <a href="/login" class="btn btn-primary">Log In</a>
+
+                <p>Don't have an account? <a href="/register">Register here</a></p>
+
+            </div>
+
+        <% } %>
+
+        <!-- Back Link -->
+        <p style="margin-top: 20px;">
+
+            <a href="/project/<%= project.project_id %>">← Back to Project Details</a>
+
+        </p>
+
+    </div>
+
+</main>
+
+<%- include('partials/footer') %>

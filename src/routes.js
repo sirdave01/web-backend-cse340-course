@@ -15,8 +15,7 @@ import {
     showProjectsPage, showProjectDetailsPage, showUpcomingProjectsPage,
     showNewProjectForm, processNewProjectForm, projectValidation,
     showEditProjectForm, processEditProjectForm,
-    addVolunteerToProject, removeVolunteerFromProject,
-    getUserVolunteeredProjectsController
+    addVolunteer, removeVolunteer, getUserVolunteeredProjectsController, showVolunteerPage
 } from './controllers/projects.js';
 
 import {
@@ -115,6 +114,8 @@ router.post('/projects/:id/volunteer', requireLogin, addVolunteer);
 
 // Remove yourself as a volunteer (must be logged in)
 router.post('/projects/:id/volunteer/remove', requireLogin, removeVolunteer);
+
+router.get('/projects/:id/volunteer', requireLogin, showVolunteerPage);
 
 router.get('/test-error', testErrorPage);
 

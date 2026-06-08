@@ -150,11 +150,11 @@ const showProjectDetailsPage = async (req, res) => {
         });
 
     } catch (error) {
-        
+
         console.error('Error loading project details:', error);
-        
+
         res.status(500).render('error', { message: 'Unable to load project details.' });
-        
+
     }
 
 };
@@ -388,12 +388,55 @@ const getUserVolunteeredProjectsController = async (req, res, next) => {
 
 };
 
+// display the volunteer confirmation page after a user volunteers for a project
+const showVolunteerPage = async (req, res) => {
 
+    const projectId = Number(req.params.id);
+
+    if (!Number.isInteger(projectId)) {
+        
+        return res.status(404).render('error', { message: 'Project not found' });
+    }
+
+    try {
+        const project = await getProjectDetails(projectId);
+
+        if (!project) {
+
+            return res.status(404).render('error', { message: 'Project not found' });
+
+        }
+
+        let isVolunteering = false;
+
+        if (req.session?.user?.id) {
+
+            isVolunteering = await hasUserVolunteeredForProject(req.session.user.id, projectId);
+
+        }
+
+        res.render('volunteer', {
+
+            title: 'Volunteer Confirmation',
+            project,
+            isVolunteering,
+            user: req.session.user
+        });
+
+    } catch (error) {
+
+        console.error('Error loading volunteer page:', error);
+
+        res.status(500).render('error', { message: 'Unable to load volunteer page.' });
+
+    }
+
+};
 
 
 export {
     showProjectsPage, showUpcomingProjectsPage, showProjectDetailsPage,
     showNewProjectForm, processNewProjectForm, projectValidation, 
     showEditProjectForm, processEditProjectForm,
-    addVolunteer, removeVolunteer, getUserVolunteeredProjectsController
+    addVolunteer, removeVolunteer, getUserVolunteeredProjectsController, showVolunteerPage
 };

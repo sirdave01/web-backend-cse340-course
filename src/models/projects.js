@@ -115,6 +115,7 @@ const getProjectDetails = async (id) => {
             p.description,
             p.location,
             p.project_date AS date,
+            p.organization_id,
             o.name AS organization_name
         FROM projects p
         JOIN organizations o ON p.organization_id = o.organization_id
@@ -271,6 +272,7 @@ const getUserVolunteeredProjects = async (user_id) => {
             p.description,
             p.location,
             p.project_date AS date,
+            p.organization_id,
             o.name AS organization_name
         FROM projects p
         JOIN volunteers v ON p.project_id = v.project_id
