@@ -14,7 +14,9 @@ import {
 import {
     showProjectsPage, showProjectDetailsPage, showUpcomingProjectsPage,
     showNewProjectForm, processNewProjectForm, projectValidation,
-    showEditProjectForm, processEditProjectForm
+    showEditProjectForm, processEditProjectForm,
+    addVolunteerToProject, removeVolunteerFromProject,
+    getUserVolunteeredProjectsController
 } from './controllers/projects.js';
 
 import {
@@ -101,10 +103,18 @@ router.post('/login', processLoginForm);
 router.get('/logout', processLogout);
 
 // router for the user dashboard page, which requires the user to be logged in to access it
-router.get('/dashboard', requireLogin, showDashboard);
+router.get('/dashboard', requireLogin, getUserVolunteeredProjectsController, showDashboard);
 
 // router for the users page, which requires the user to be logged in and have the admin role to access it
 router.get('/users', requireLogin, requireRole('admin'), showUsers);
+
+// ====================== VOLUNTEER ROUTES ======================
+
+// Volunteer for a project (must be logged in)
+router.post('/projects/:id/volunteer', requireLogin, addVolunteer);
+
+// Remove yourself as a volunteer (must be logged in)
+router.post('/projects/:id/volunteer/remove', requireLogin, removeVolunteer);
 
 router.get('/test-error', testErrorPage);
 

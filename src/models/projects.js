@@ -185,4 +185,109 @@ const updateProject = async (projectId, title, description, location, date) => {
     return result.rows[0].project_id;
 };
 
-export { getAllProjects, getProjectsByOrganizationId, getUpcomingProjects, getProjectDetails, createProject, updateProject };
+// adding the volunteer function that uses two parameters
+
+const volunteerForProject = async (user_id, project_id) => { 
+
+    const query = `
+        INSERT INTO volunteers (user_id, project_id)
+        VALUES ($1, $2)
+        ON CONFLICT (user_id, project_id) DO NOTHING
+        RETURNING volunteer_id
+    `;
+
+    const queryParams = [user_id, project_id];
+
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to volunteer for project');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('User volunteered for project with ID:', result.rows[0].volunteer_id);
+    }
+
+    return result.rows[0].volunteer_id;
+};
+
+
+//adding a function that lets volunteers remove thenselves from a project
+
+const removeVolunteerFromProject = async (user_id, project_id) => {
+
+    const query = `
+        DELETE FROM volunteers
+        WHERE user_id = $1 AND project_id = $2
+        RETURNING volunteer_id
+    `;
+
+    const queryParams = [user_id, project_id];
+
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to remove volunteer from project');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('User removed from project with ID:', result.rows[0].volunteer_id);
+    }
+
+    return result.rows[0].volunteer_id;
+
+ };
+
+
+//check if user has already volunteered for a project
+
+const hasUserVolunteeredForProject = async (user_id, project_id) => {
+
+    const query = `
+        SELECT volunteer_id
+        FROM volunteers
+        WHERE user_id = $1 AND project_id = $2
+        LIMIT 1
+    `;
+
+    const queryParams = [user_id, project_id];
+
+    const result = await db.query(query, queryParams);
+
+    return result.rows.length > 0;
+
+ };
+
+
+//pull up and display all projects a user volunteered for
+
+const getUserVolunteeredProjects = async (user_id) => {
+
+    const query = `
+
+        SELECT 
+            p.project_id,
+            p.title,
+            p.description,
+            p.location,
+            p.project_date AS date,
+            o.name AS organization_name
+        FROM projects p
+        JOIN volunteers v ON p.project_id = v.project_id
+        JOIN organizations o ON p.organization_id = o.organization_id
+        WHERE v.user_id = $1
+        ORDER BY p.project_date ASC;
+    `;
+
+    const result = await db.query(query, [user_id]);
+
+    return result.rows;
+
+};
+
+export {
+    getAllProjects, getProjectsByOrganizationId, getUpcomingProjects,
+    getProjectDetails, createProject, updateProject, volunteerForProject,
+    removeVolunteerFromProject, hasUserVolunteeredForProject,
+    getUserVolunteeredProjects
+};

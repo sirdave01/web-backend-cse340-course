@@ -1,6 +1,11 @@
 // importing the db handler for projects page
 
-import { getAllProjects, getUpcomingProjects, getProjectDetails, createProject, updateProject } from '../models/projects.js';
+import {
+    getAllProjects, getUpcomingProjects,
+    getProjectDetails, createProject, updateProject,
+    volunteerForProject, removeVolunteerFromProject,
+    hasUserVolunteeredForProject, getUserVolunteeredProjects
+} from '../models/projects.js';
 
 import { getCategoriesByProjectId } from '../models/categories.js';
 
@@ -119,14 +124,37 @@ const showProjectDetailsPage = async (req, res) => {
 
         }
 
-        res.render('project', { title: project.title, project, categories });
+        // Check if logged-in user is already volunteering
+        let isVolunteering = false;
+
+        if (req.session?.user?.id) {
+
+            isVolunteering = await hasUserVolunteeredForProject(
+
+                req.session.user.id, 
+
+                projectId
+
+            );
+
+        }
+
+        res.render('project', { 
+
+            title: project.title, 
+            project, 
+            categories,
+            isVolunteering,           // ← Important for the view
+            user: req.session.user    // ← useful for checking login status
+
+        });
 
     } catch (error) {
-
+        
         console.error('Error loading project details:', error);
-
+        
         res.status(500).render('error', { message: 'Unable to load project details.' });
-
+        
     }
 
 };
@@ -249,8 +277,123 @@ const processEditProjectForm = async (req, res) => {
 
 };
 
+// user must be logged in to volunteer for a project
+
+const addVolunteer = async (req, res) => {
+
+    try {
+
+        const user_id = req.session.user?.id;
+
+        const project_id = parseInt(req.params.id);
+
+        if (!user_id) {
+
+            req.flash('error', 'You must be logged in to volunteer.');
+
+            return res.redirect('/login');
+
+        }
+
+        const project = await getProjectDetails(project_id);
+
+        if (!project) {
+
+            return res.status(404).render('error', { message: 'Project not found' });
+
+        }
+
+        await volunteerForProject(user_id, project_id);
+
+        req.flash('success', 'You have successfully volunteered for this project!');
+
+        res.redirect(`/projects/${project_id}`);
+
+    } catch (error) {
+
+        console.error('Error volunteering for project:', error);
+
+        req.flash('error', 'Failed to volunteer. Please try again.');
+
+        res.redirect(`/projects/${req.params.id}`);
+
+    }
+
+};
+
+// Remove yourself as a volunteer
+
+const removeVolunteer = async (req, res) => {
+
+    try {
+
+        const user_id = req.session.user?.id;
+
+        const project_id = parseInt(req.params.id);
+
+        if (!user_id) {
+
+            req.flash('error', 'You must be logged in to remove yourself as a volunteer.');
+
+            return res.redirect('/login');
+        }
+
+        await removeVolunteerFromProject(user_id, project_id);
+
+        req.flash('success', 'You have successfully removed yourself as a volunteer for this project.');
+
+        res.redirect(`/projects/${project_id}`);
+
+    } catch (error) {
+
+        console.error('Error removing volunteer from project:', error);
+
+        req.flash('error', 'Failed to remove volunteer. Please try again.');
+
+        res.redirect(`/projects/${req.params.id}`);
+
+    }
+
+};
+
+// Get user's volunteered projects
+
+const getUserVolunteeredProjectsController = async (req, res, next) => {
+
+    try {
+
+        if (!req.session.user) {
+
+            res.locals.volunteeredProjects = [];
+
+            return next();
+
+        }
+
+        const volunteeredProjects = await getUserVolunteeredProjects(req.session.user.id);
+
+        res.locals.volunteeredProjects = volunteeredProjects || [];
+
+        next();
+
+    } catch (error) {
+
+        console.error('Error fetching volunteered projects:', error);
+
+        res.locals.volunteeredProjects = [];
+
+        next();
+
+    }
+
+};
+
+
+
+
 export {
     showProjectsPage, showUpcomingProjectsPage, showProjectDetailsPage,
     showNewProjectForm, processNewProjectForm, projectValidation, 
-    showEditProjectForm, processEditProjectForm
+    showEditProjectForm, processEditProjectForm,
+    addVolunteer, removeVolunteer, getUserVolunteeredProjectsController
 };
