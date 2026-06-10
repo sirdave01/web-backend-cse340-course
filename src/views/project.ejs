@@ -115,7 +115,9 @@
 
                 </div>
 
-                <p><a href="/edit-project/<%= project.project_id %>">Edit Project</a></p>
+                <% if (isLoggedIn) { %>
+                    <p><a href="/edit-project/<%= project.project_id %>">Edit Project</a></p>
+                <% } %>
 
     </main>
 

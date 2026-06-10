@@ -22,7 +22,9 @@
 
         </ul>
 
-        <p><a href="/edit-organization/<%= organization.organization_id %>">Edit Organization</a></p>
+        <% if (isLoggedIn) { %>
+            <p><a href="/edit-organization/<%= organization.organization_id %>">Edit Organization</a></p>
+        <% } %>
 
     </main>
 

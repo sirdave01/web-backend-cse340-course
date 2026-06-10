@@ -26,7 +26,9 @@
         
         </ul>
 
-        <p><a href="/edit-category/<%= category.category_id %>">Edit Category</a></p>
+        <% if (isLoggedIn) { %>
+            <p><a href="/edit-category/<%= category.category_id %>">Edit Category</a></p>
+        <% } %>
 
     </main>
 
